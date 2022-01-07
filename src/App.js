@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
 
-function App() {
+import Appointments from "./Screens/Appointments";
+import Certificate from "./Screens/Certificate";
+import ChangePassword from "./Screens/ChangePassword";
+import CoursePayment from "./Screens/CoursePayment";
+import Lectures from "./Screens/Lectures";
+import Login from "./Screens/Login";
+import OfferedCourses from "./Screens/OfferedCourses";
+import PaymentLogDetails from "./Screens/PaymentLogDetails";
+import PaymentLogs from "./Screens/PaymentLogs";
+import Profile from "./Screens/Profile";
+import RegistrationCourses from "./Screens/RegistrationCourses";
+import RequestNewAppointment from "./Screens/RequestNewAppointment";
+import Signup from "./Screens/Signup";
+import ViewLecture from "./Screens/ViewLecture";
+import EditProfile from "./Screens/EditProfile";
+
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Route path="/" component={Login} exact />{" "}
+      <Route path="/Signup" component={Signup} exact />{" "}
+      <PrivateRoute exact path="/Appointments" component={Appointments} />{" "}
+      <PrivateRoute exact path="/Certificate" component={Certificate} />{" "}
+      <PrivateRoute exact path="/ChangePassword" component={ChangePassword} />{" "}
+      <PrivateRoute exact path="/CoursePayment" component={CoursePayment} />{" "}
+      <PrivateRoute exact path="/Lectures" component={Lectures} />{" "}
+      <PrivateRoute exact path="/OfferedCourses" component={OfferedCourses} />{" "}
+      <PrivateRoute
+        exact
+        path="/PaymentLogDetails"
+        component={PaymentLogDetails}
+      />{" "}
+      <PrivateRoute exact path="/PaymentLogs" component={PaymentLogs} />{" "}
+      <PrivateRoute
+        exact
+        path="/RegistrationCourses"
+        component={RegistrationCourses}
+      />{" "}
+      <PrivateRoute
+        exact
+        path="/RequestNewAppointment"
+        component={RequestNewAppointment}
+      />{" "}
+      <PrivateRoute exact path="/ViewLecture" component={ViewLecture} />{" "}
+      <PrivateRoute exact path="/Profile" component={EditProfile} />{" "}
+
+    </Router>
   );
-}
+};
 
 export default App;
