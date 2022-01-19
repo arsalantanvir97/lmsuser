@@ -1,9 +1,118 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import CreditCardInput from "react-credit-card-input";
+import { baseURL, imageURL } from "../utils/api";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import moment from "moment";
+import StripeCheckout from "react-stripe-checkout";
+import Swal from "sweetalert2";
+import { SunspotLoader } from "react-awesome-loaders";
 
-const CoursePayment = () => {
+const CoursePayment = (props) => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const [course, setcourse] = useState();
+  const [amountinnum, setamountinnum] = useState();
+  const [loading, setloading] = useState(false);
+
+  useEffect(() => {
+    handleGetCourse();
+    setamountinnum(Number(props?.location?.state?.amount?.amount));
+  }, []);
+  useEffect(() => {
+    console.log("props?.location?.state", props);
+  }, [props]);
+  const handleGetCourse = async () => {
+    try {
+      const res = await axios({
+        url: `${baseURL}/course/courseDetails/${props?.location?.state?.id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+
+      console.log("res", res);
+      setcourse(res?.data?.course);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const [email, setemail] = useState("");
+  const [phone, setphone] = useState("");
+  const [cardholdername, setcardholdername] = useState("");
+  const [cardNumber, setcardNumber] = useState("");
+  const [expiry, setexpiry] = useState("");
+  const [cvc, setcvc] = useState("");
+
+  const [username, setusername] = useState("");
+  const [toggleform, settoggleform] = useState(0);
+
+  const emptyfunc = async () => {};
+
+  async function handleToken(token) {
+    setloading(true);
+    console.log("handleToken");
+    const config = {
+      header: {
+        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V"
+      }
+    };
+    const response = await axios.post(
+      `${baseURL}/checkout`,
+      { token, product: amountinnum },
+      config
+    );
+    console.log("response", response);
+    const { status } = response.data;
+
+    console.log(
+      "res",
+      response.data.id,
+      response.data.status,
+      response.headers.date,
+      response.data.receipt_email
+    );
+    const res = await axios.post(
+      `${baseURL}/registeredCourses/createregisteredCourses`,
+      {
+        userid: userInfo?._id,
+        courseid: course?._id,
+        duration: props?.location?.state?.amount?.month,
+        cost: amountinnum
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      }
+    );
+    if (res?.status == 201) {
+      props?.history?.push("/RegistrationCourses");
+      setloading(false);
+    }
+  }
+
   return (
     <>
+    {loading&&
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-30%, -60%)",
+          zIndex:1111111111111
+        }}
+      >
+        <SunspotLoader
+          gradientColors={["#000"]}
+          shadowColor={"#FFF"}
+          desktopSize={"50px"}
+          mobileSize={"35px"}
+        />
+      </div>}
       <section className="admin-profile">
         <div className="app-content content">
           <div className="content-wrapper">
@@ -15,7 +124,7 @@ const CoursePayment = () => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                          <Link to='/PaymentLogs'>
+                          <Link to="/PaymentLogs">
                             <h1 className="main-heading">
                               <i className="fas fa-chevron-left" /> Payments
                             </h1>
@@ -26,266 +135,178 @@ const CoursePayment = () => {
                               <div className="container">
                                 <div className="row justify-content-center">
                                   <div className="col-lg-8 col-12">
-                                    <form id="msform">
+                                    <>
                                       {/* progressbar */}
                                       <ul id="progressbar" className="pl-0">
-                                        <li className="active">
+                                        <li
+                                          className={
+                                            toggleform == 0 ? "active" : null
+                                          }
+                                        >
                                           <h3 className="medium">Address</h3>
                                           <i className="user-card" />
                                         </li>
-                                        <li>
+                                        <li
+                                          className={
+                                            toggleform == 1 ? "active" : null
+                                          }
+                                        >
                                           <h3 className="medium">Payment</h3>
                                           <i className="payment" />
                                         </li>
-                                        <li>
+                                        <li
+                                          className={
+                                            toggleform == 2 ? "active" : null
+                                          }
+                                        >
                                           <h3 className="medium">Confirm</h3>
                                           <i className="check" />
                                         </li>
                                       </ul>
                                       {/* fieldsets */}
-                                      <fieldset>
-                                        <div className="row">
-                                          <div className="col-md-6 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                Email Address
-                                              </label>
-                                              <input
-                                                type="email"
-                                                placeholder="Enter Email Address"
-                                                className="site-input"
-                                              />
+                                      {toggleform == 0 ? (
+                                        <fieldset>
+                                          <div className="row">
+                                            <div className="col-md-6 col-sm-12">
+                                              <div className="form-field">
+                                                <label
+                                                  htmlFor
+                                                  className="all-label2 mb-1"
+                                                >
+                                                  Email Address
+                                                </label>
+                                                <input
+                                                  type="email"
+                                                  placeholder="Enter Email Address"
+                                                  className="site-input"
+                                                  value={email}
+                                                  onChange={(e) => {
+                                                    setemail(e.target.value);
+                                                  }}
+                                                />
+                                              </div>
+                                            </div>
+                                            <div className="col-md-6 col-sm-12">
+                                              <div className="form-field">
+                                                <label
+                                                  htmlFor
+                                                  className="all-label2 mb-1"
+                                                >
+                                                  Phone
+                                                </label>
+                                                <input
+                                                  placeholder="Enter phone number"
+                                                  value={phone}
+                                                  className="site-input"
+                                                  onChange={(e) => {
+                                                    setphone(e.target.value);
+                                                  }}
+                                                  type="number"
+                                                />
+                                              </div>
+                                            </div>
+
+                                            <div className="col-md-6 col-sm-12">
+                                              <div className="form-field">
+                                                <label
+                                                  htmlFor
+                                                  className="all-label2 mb-1"
+                                                >
+                                                  User Name
+                                                </label>
+                                                <input
+                                                  type="text"
+                                                  name="name"
+                                                  className="site-input"
+                                                  placeholder="Enter User Name"
+                                                  value={username}
+                                                  onChange={(e) => {
+                                                    setusername(e.target.value);
+                                                  }}
+                                                />
+                                              </div>
                                             </div>
                                           </div>
-                                          <div className="col-md-6 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                Phone
-                                              </label>
-                                              <input
-                                                type="number"
-                                                name="number"
-                                                className="site-input"
-                                                placeholder="Enter Phone Number "
-                                              />
+                                        </fieldset>
+                                      ) : toggleform == 1 ? (
+                                        <fieldset>
+                                          <div className="row">
+                                            <div className="col-md-6 col-sm-12">
+                                              <div className="form-field">
+                                                <label
+                                                  htmlFor
+                                                  className="all-label2 mb-1"
+                                                >
+                                                  Card Holder's Name:
+                                                </label>
+                                                <input
+                                                  type="email"
+                                                  placeholder="Enter Card Holder Name"
+                                                  className="site-input"
+                                                  value={cardholdername}
+                                                  onChange={(e) => {
+                                                    setcardholdername(
+                                                      e.target.value
+                                                    );
+                                                  }}
+                                                />
+                                              </div>
+                                            </div>
+                                            <div className="col-md-6 col-sm-12">
+                                              <div className="form-field">
+                                                <label
+                                                  htmlFor
+                                                  className="all-label2 mb-1"
+                                                >
+                                                  Card Details:
+                                                </label>
+                                                <CreditCardInput
+                                                  cardCVCInputRenderer={({
+                                                    handleCardCVCChange,
+                                                    props
+                                                  }) => (
+                                                    <input
+                                                      {...props}
+                                                      onChange={handleCardCVCChange(
+                                                        (e) =>
+                                                          setcvc(e.target.value)
+                                                      )}
+                                                    />
+                                                  )}
+                                                  cardExpiryInputRenderer={({
+                                                    handleCardExpiryChange,
+                                                    props
+                                                  }) => (
+                                                    <input
+                                                      {...props}
+                                                      onChange={handleCardExpiryChange(
+                                                        (e) =>
+                                                          setexpiry(
+                                                            e.target.value
+                                                          )
+                                                      )}
+                                                    />
+                                                  )}
+                                                  cardNumberInputRenderer={({
+                                                    handleCardNumberChange,
+                                                    props
+                                                  }) => (
+                                                    <input
+                                                      {...props}
+                                                      onChange={handleCardNumberChange(
+                                                        (e) =>
+                                                          setcardNumber(
+                                                            e.target.value
+                                                          )
+                                                      )}
+                                                    />
+                                                  )}
+                                                />
+                                              </div>
                                             </div>
                                           </div>
-                                          {/* <div class="col-12">
-                                                                      <div class="d-flex align-items-center">
-                                                                          <h5 class="text-uppercase mr-3 mb-0">Billing Address</h5>
-                                                                          <p class="mb-0">
-                                                                              <input type="checkbox" id="c1" name="cb" />
-                                                                              <label for="c1" class="mb-0 grey-text">Save Address for next purchase</label>
-                                                                          </p>
-                                                                      </div>
-                                                                      <hr class="mt-5" />
-                                                                  </div> */}
-                                          <div className="col-md-6 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                User Name
-                                              </label>
-                                              <input
-                                                type="text"
-                                                name="name"
-                                                className="site-input"
-                                                placeholder="Enter User Name"
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="row">
-                                          {/* <div class="col-md-6 col-sm-12">
-                                                                      <div class="form-field">
-                                                                          <label for="">Address line 1</label>
-                                                                          <input type="text" name="name" class="site-input" placeholder="Enter Address Line 1 " />
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-md-6 col-sm-12">
-                                                                      <div class="form-field">
-                                                                          <label for="">Address line 2</label>
-                                                                          <input type="text" name="name" class="site-input" placeholder="Enter Address Line 2 " />
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-md-6 col-sm-12">
-                                                                      <div class="form-field">
-                                                                          <label for="">City</label>
-                                                                          <input type="text" name="name" class="site-input" placeholder="Enter City" />
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-md-6 col-sm-12">
-                                                                      <div class="form-field">
-                                                                          <label for="">State</label>
-                                                                          <input type="text" name="name" class="site-input" placeholder="Enter State " />
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-md-6 col-sm-12">
-                                                                      <div class="form-field">
-                                                                          <label for="">Zip Code</label>
-                                                                          <input type="number" class="site-input" placeholder="Enter Zip Code " />
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-md-6 col-sm-12">
-                                                                      <div class="form-field">
-                                                                          <label for="">Country</label>
-                                                                          <input type="text" name="name" class="site-input" placeholder="Enter Country" />
-                                                                      </div>
-                                                                  </div> */}
-                                          {/* <div class="col-12">
-                                                                      <p class="black-text">
-                                                                          <input type="checkbox" id="shipAd" name="radio-group" />
-                                                                          <label for="shipAd" class="bordered">Ship to a different location</label>
-                                                                      </p>
-                                                                  </div>
-                                                                  <div class="shipping-address-div" style="display: none">
-                                                                      <div class="row ml-0 mr-0">
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">User Name</label>
-                                                                                  <input type="text" name="name" class="site-input" placeholder="Enter User Name" />
-                                                                              </div>
-                                                                          </div>
-                                                                      </div>
-                                                                      <div class="row">
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">Address line 1</label>
-                                                                                  <input type="text" name="name" class="site-input" placeholder="Enter Address Line 1 " />
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">Address line 2</label>
-                                                                                  <input type="text" name="name" class="site-input" placeholder="Enter Address Line 2 " />
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">City</label>
-                                                                                  <input type="text" name="name" class="site-input" placeholder="Enter City" />
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">State</label>
-                                                                                  <input type="text" name="name" class="site-input" placeholder="Enter State " />
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">Zip Code</label>
-                                                                                  <input type="number" class="site-input" placeholder="Enter Zip Code " />
-                                                                              </div>
-                                                                          </div>
-                                                                          <div class="col-md-6 col-sm-12">
-                                                                              <div class="form-field">
-                                                                                  <label for="">Country</label>
-                                                                                  <input type="text" name="name" class="site-input" placeholder="Enter Country" />
-                                                                              </div>
-                                                                          </div>
-                                                                      </div>
-                                                                  </div> */}
-                                        </div>
-                                        <div className="text-center">
-                                          <input
-                                            type="button"
-                                            name="next"
-                                            className="next site-btn l-blue-btn gren-btn"
-                                            defaultValue="Continue"
-                                          />
-                                        </div>
-                                      </fieldset>
-                                      <fieldset>
-                                        <div className="row justify-content-center">
-                                          <div className="col-md-8 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                Card Holder's Name:
-                                              </label>
-                                              <input
-                                                type="text"
-                                                name="name"
-                                                className="site-input"
-                                                placeholder="Enter Card Holder Name"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="col-md-8 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                Card Number:
-                                              </label>
-                                              <input
-                                                type="number"
-                                                name="number"
-                                                className="site-input"
-                                                placeholder="Enter Card Number"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="col-md-8 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                CVV Number:
-                                              </label>
-                                              <input
-                                                type="number"
-                                                name="number"
-                                                className="site-input"
-                                                placeholder="Enter CVV Number"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="col-md-8 col-sm-12">
-                                            <div className="form-field">
-                                              <label
-                                                htmlFor
-                                                className="all-label2 mb-1"
-                                              >
-                                                Expiry Month/Year:
-                                              </label>
-                                              <input
-                                                type="number"
-                                                className="site-input"
-                                                placeholder="mm/yyyy"
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="text-center">
-                                          <input
-                                            type="button"
-                                            name="previous"
-                                            className="previous site-btn gren-btn"
-                                            defaultValue="Previous"
-                                          />
-                                          <input
-                                            type="button"
-                                            name="next"
-                                            className="next site-btn l-blue-btn gren-btn"
-                                            defaultValue="Continue"
-                                          />
-                                        </div>
-                                      </fieldset>
-                                      <fieldset>
+                                        </fieldset>
+                                      ) : toggleform == 2 ? (
                                         <div className="table-responsive right">
                                           <table className="table shopping-cart-wrap cart m-0">
                                             <tbody>
@@ -298,7 +319,12 @@ const CoursePayment = () => {
                                                 <td>
                                                   <div className="img-wrap">
                                                     <img
-                                                      src="images/course-register.png"
+                                                      src={
+                                                        course?.images?.length >
+                                                        0
+                                                          ? `${imageURL}${course?.images?.[0]}`
+                                                          : ""
+                                                      }
                                                       className="img-fluid step-form-img w-100"
                                                       alt=""
                                                     />
@@ -319,13 +345,15 @@ const CoursePayment = () => {
                                                     </div>
                                                     <div className="col-6">
                                                       <p className="step-table-p-value">
-                                                        ABC
+                                                        {course?.coursecode}
                                                       </p>
                                                       <p className="step-table-p-value">
-                                                        $30
+                                                        ${amountinnum}
                                                       </p>
                                                       <p className="step-table-p-value">
-                                                        02/01/2021
+                                                        {moment
+                                                          .utc(new Date())
+                                                          .format("YYYY-MM-DD")}
                                                       </p>
                                                     </div>
                                                   </div>
@@ -345,13 +373,26 @@ const CoursePayment = () => {
                                                     </div>
                                                     <div className="col-6">
                                                       <p className="step-table-p-value">
-                                                        Software
+                                                        {course?.coursetitle}
                                                       </p>
                                                       <p className="step-table-p-value">
-                                                        03 Months
+                                                        {
+                                                          props?.location?.state
+                                                            ?.amount?.month
+                                                        }{" "}
+                                                        Months
                                                       </p>
                                                       <p className="step-table-p-value">
-                                                        02/01/2021
+                                                        {moment(
+                                                          course?.createdAt
+                                                        )
+                                                          .add(
+                                                            props?.location
+                                                              ?.state?.amount
+                                                              ?.month,
+                                                            "M"
+                                                          )
+                                                          .format("YYYY-MM-DD")}
                                                       </p>
                                                     </div>
                                                   </div>
@@ -360,24 +401,51 @@ const CoursePayment = () => {
                                             </tbody>
                                           </table>
                                         </div>
-                                        <div className="text-center mt-2">
-                                          <input
-                                            type="button"
-                                            name="previous"
-                                            className="previous site-btn gren-btn"
-                                            defaultValue="Previous"
-                                          />
+                                      ) : null}
+                                      <div className="text-center mt-2">
+                                        {toggleform !== 0 && (
                                           <button
                                             type="button"
-                                            className="site-btn l-blue-btn gren-btn"
-                                            data-toggle="modal"
-                                            data-target="#enrolled-course"
+                                            class="green-btn mr-1"
+                                            onClick={() =>
+                                              settoggleform(toggleform - 1)
+                                            }
                                           >
-                                            Place Order
+                                            Previous
                                           </button>
-                                        </div>
-                                      </fieldset>
-                                    </form>
+                                        )}
+                                        {toggleform == 2 ? null : (
+                                          <button
+                                            onClick={() => {
+                                              toggleform == 0 &&
+                                              email?.length > 0 &&
+                                              phone?.length > 0 &&
+                                              username?.length > 0
+                                                ? settoggleform(1)
+                                                : toggleform == 1 &&
+                                                  cardholdername?.length > 0 &&
+                                                  cvc?.length > 0 &&
+                                                  cardNumber?.length > 0 &&
+                                                  expiry?.length > 0
+                                                ? settoggleform(2)
+                                                : emptyfunc();
+                                            }}
+                                            type="button"
+                                            class="green-btn"
+                                          >
+                                            Continue
+                                          </button>
+                                        )}
+                                        {toggleform == 2 && (
+                                          <StripeCheckout
+                                            stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
+                                            token={handleToken}
+                                            amount={amountinnum * 100}
+                                            email={email}
+                                          ></StripeCheckout>
+                                        )}
+                                      </div>
+                                    </>
                                   </div>
                                 </div>
                               </div>

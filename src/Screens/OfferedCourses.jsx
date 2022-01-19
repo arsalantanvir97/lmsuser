@@ -23,6 +23,7 @@ const OfferedCourses = () => {
         }
       });
       console.log("res", res);
+      setgroupedCourses(res?.data?.categoryCourses);
     } catch (err) {
       console.log(err);
     }
@@ -48,70 +49,49 @@ const OfferedCourses = () => {
                             <option value>Category B</option>
                           </select>
                         </div>
-                        <div className="dash-card-inner ">
-                          <div className="row">
-                            <div className="col-lg-6 mb-3 mt-lg-5 mt-2">
-                              <h2 className="course-heading">Category B</h2>
+                        {groupedCourses?.map((group) => (
+                          <div className="dash-card-inner ">
+                            <div className="row">
+                              <div className="col-lg-6 mb-3 mt-lg-5 mt-2">
+                                <h2 className="course-heading">Category B</h2>
+                              </div>
                             </div>
+                            {group?.groupedata?.map((groupdata) => (
+                              <div className="row">
+                                <div className="col-lg-4 mt-2">
+                                  <Link to={`/CourseDetails/${groupdata?._id}`}>
+                                    <img
+                                      src={
+                                        groupdata?.images?.length > 0
+                                          ? `${imageURL}${groupdata?.images?.[0]}`
+                                          : "images/course-3.png"
+                                      }
+                                      alt=""
+                                      className="course-thumbnail w-100 img-fluid"
+                                    />{" "}
+                                  </Link>
+                                  <h3 className="course-title">
+                                    {" "}
+                                    {groupdata?.coursetitle}
+                                  </h3>
+                                  <p className="course-description">
+                                    {groupdata?.coursedescription}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                            {/* <div className="row">
+                              <div className="col-12 text-center mt-lg-5 mt-3">
+                                <a
+                                  href="course-detail.php"
+                                  className="d-inline-block gren-btn"
+                                >
+                                  View More
+                                </a>
+                              </div>
+                            </div> */}
                           </div>
-                          <div className="row">
-                            <div className="col-lg-4 mt-2">
-                              <img
-                                src="images/course-1.png"
-                                alt=""
-                                className="course-thumbnail w-100 img-fluid"
-                              />
-                              <h3 className="course-title">Course Title</h3>
-                              <p className="course-description">
-                                Lorem ipsum dolor sit amet, consetetur
-                                sadipscing elitr, sed diam nonumy eirmod tempor
-                                invidunt ut labore et dolore magna aliquyam
-                                erat, sed diam voluptua. At vero eos et accusam
-                                et
-                              </p>
-                            </div>
-                            <div className="col-lg-4 mt-2">
-                              <img
-                                src="images/course-2.png"
-                                alt=""
-                                className="course-thumbnail w-100 img-fluid"
-                              />
-                              <h3 className="course-title">Course Title</h3>
-                              <p className="course-description">
-                                Lorem ipsum dolor sit amet, consetetur
-                                sadipscing elitr, sed diam nonumy eirmod tempor
-                                invidunt ut labore et dolore magna aliquyam
-                                erat, sed diam voluptua. At vero eos et accusam
-                                et
-                              </p>
-                            </div>
-                            <div className="col-lg-4 mt-2">
-                              <img
-                                src="images/course-3.png"
-                                alt=""
-                                className="course-thumbnail w-100 img-fluid"
-                              />
-                              <h3 className="course-title">Course Title</h3>
-                              <p className="course-description">
-                                Lorem ipsum dolor sit amet, consetetur
-                                sadipscing elitr, sed diam nonumy eirmod tempor
-                                invidunt ut labore et dolore magna aliquyam
-                                erat, sed diam voluptua. At vero eos et accusam
-                                et
-                              </p>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-12 text-center mt-lg-5 mt-3">
-                              <a
-                                href="course-detail.php"
-                                className="d-inline-block gren-btn"
-                              >
-                                View More
-                              </a>
-                            </div>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
                   </div>

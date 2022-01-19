@@ -7,6 +7,7 @@ import Pagination from "../components/Padgination";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { LoaderName } from "react-awesome-loaders"
 
 const RegistrationCourses = () => {
   let history = useHistory();

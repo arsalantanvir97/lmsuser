@@ -15,6 +15,8 @@ import RequestNewAppointment from "./Screens/RequestNewAppointment";
 import Signup from "./Screens/Signup";
 import ViewLecture from "./Screens/ViewLecture";
 import EditProfile from "./Screens/EditProfile";
+import CourseDetails from "./Screens/CourseDetails";
+import TakeQuiz from "./Screens/TakeQuiz";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
@@ -26,7 +28,6 @@ const App = () => {
       <PrivateRoute exact path="/Appointments" component={Appointments} />{" "}
       <PrivateRoute exact path="/Certificate" component={Certificate} />{" "}
       <PrivateRoute exact path="/ChangePassword" component={ChangePassword} />{" "}
-      <PrivateRoute exact path="/CoursePayment" component={CoursePayment} />{" "}
       <PrivateRoute exact path="/Lectures" component={Lectures} />{" "}
       <PrivateRoute exact path="/OfferedCourses" component={OfferedCourses} />{" "}
       <PrivateRoute
@@ -45,9 +46,11 @@ const App = () => {
         path="/RequestNewAppointment"
         component={RequestNewAppointment}
       />{" "}
-      <PrivateRoute exact path="/ViewLecture" component={ViewLecture} />{" "}
+      <PrivateRoute exact path="/ViewLecture/:id" component={ViewLecture} />{" "}
       <PrivateRoute exact path="/Profile" component={EditProfile} />{" "}
-
+      <PrivateRoute exact path="/CourseDetails/:id" component={CourseDetails} />{" "}
+      <PrivateRoute exact path="/CoursePayment" component={CoursePayment} />{" "}
+      <PrivateRoute exact path="/TakeQuiz/:id" component={TakeQuiz} />{" "}
     </Router>
   );
 };
