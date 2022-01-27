@@ -22,7 +22,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 const App = () => {
   return (
-    <Router>
+    <Router basename="/LMS/user">
       <Route path="/" component={Login} exact />{" "}
       <Route path="/Signup" component={Signup} exact />{" "}
       <PrivateRoute exact path="/Appointments" component={Appointments} />{" "}
