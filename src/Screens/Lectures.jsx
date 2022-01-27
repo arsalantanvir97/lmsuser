@@ -88,7 +88,7 @@ const Lectures = () => {
                         <div className="col-lg-9 text-right">
                           {coursedetails?.createdAt?.length > 0 && (
                             <Link
-                              to={`/ViewLecture/${coursedetails?._id}`}
+                              to={`/ViewLecture${coursedetails?._id}`}
                               className="gren-btn d-inline-block"
                             >
                               View Lectures

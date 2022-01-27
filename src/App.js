@@ -46,11 +46,11 @@ const App = () => {
         path="/RequestNewAppointment"
         component={RequestNewAppointment}
       />{" "}
-      <PrivateRoute exact path="/ViewLecture/:id" component={ViewLecture} />{" "}
+      <PrivateRoute exact path="/ViewLecture:id" component={ViewLecture} />{" "}
       <PrivateRoute exact path="/Profile" component={EditProfile} />{" "}
-      <PrivateRoute exact path="/CourseDetails/:id" component={CourseDetails} />{" "}
+      <PrivateRoute exact path="/CourseDetails:id" component={CourseDetails} />{" "}
       <PrivateRoute exact path="/CoursePayment" component={CoursePayment} />{" "}
-      <PrivateRoute exact path="/TakeQuiz/:id" component={TakeQuiz} />{" "}
+      <PrivateRoute exact path="/TakeQuiz:id" component={TakeQuiz} />{" "}
     </Router>
   );
 };

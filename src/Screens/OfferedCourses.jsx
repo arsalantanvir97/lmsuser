@@ -59,7 +59,7 @@ const OfferedCourses = () => {
                             {group?.groupedata?.map((groupdata) => (
                               <div className="row">
                                 <div className="col-lg-4 mt-2">
-                                  <Link to={`/CourseDetails/${groupdata?._id}`}>
+                                  <Link to={`/CourseDetails${groupdata?._id}`}>
                                     <img
                                       src={
                                         groupdata?.images?.length > 0

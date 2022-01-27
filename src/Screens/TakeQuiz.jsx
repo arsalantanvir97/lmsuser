@@ -83,12 +83,12 @@ const TakeQuiz = ({ match }) => {
                                 <div className="clearfix" />
                                 <div className="dash-card-inner mt-4">
                                   <form>
-                                   {quiz?.quizinfo?.length>0 && quiz?.quizinfo?.map(quizzz=>(
+                                   {quiz?.quizinfo?.length>0 && quiz?.quizinfo?.map((quizzz,index)=>(
                                     <div className="row mt-2 mx-0 pb-2">
                                       <div className="col-12 mt-2">
                                         <div className="d-flex">
                                           <label htmlFor className="question">
-                                            Q3:
+                                            Q{index+1}:
                                           </label>
                                           <div className="ml-1">
                                             <p className="question">
@@ -99,7 +99,7 @@ const TakeQuiz = ({ match }) => {
                                                 <input
                                                   type="radio"
                                                   id="test10"
-                                                  name="radio-group"
+                                                  name="radio-group"sa
                                                 />
                                                 <label
                                                   htmlFor="test10"

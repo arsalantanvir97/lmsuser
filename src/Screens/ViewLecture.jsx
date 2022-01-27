@@ -237,7 +237,7 @@ const ViewLecture = () => {
                             )}
                             <div className="col-lg-4 mt-2 text-lg-center">
                               <Link
-                                to={`/TakeQuiz/${coursedetails?.courseid?._id}`}
+                                to={`/TakeQuiz${coursedetails?.courseid?._id}`}
                                 className={
                                   vidindex == lecturedetails?.length - 1
                                     ? "-btn-2 d-inline-block"
