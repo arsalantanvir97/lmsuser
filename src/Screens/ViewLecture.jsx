@@ -235,18 +235,20 @@ const ViewLecture = () => {
                                 </Link>
                               </div>
                             )}
-                            <div className="col-lg-4 mt-2 text-lg-center">
-                              <Link
-                                to={`/TakeQuiz${coursedetails?.courseid?._id}`}
-                                className={
-                                  vidindex == lecturedetails?.length - 1
-                                    ? "-btn-2 d-inline-block"
-                                    : "disabled-btn-2 d-inline-block"
-                                }
-                              >
-                                Take Quiz
-                              </Link>
-                            </div>
+                            {vidindex == lecturedetails?.length - 1 ?  showbutton &&(
+                              <div className="col-lg-4 mt-2 text-lg-center">
+                                <Link
+                                  to={`/TakeQuiz${coursedetails?.courseid?._id}`}
+                                  className={
+                                    vidindex == lecturedetails?.length - 1
+                                      ? "-btn-2 d-inline-block"
+                                      : "disabled-btn-2 d-inline-block"
+                                  }
+                                >
+                                  Take Quiz
+                                </Link>
+                              </div>
+                            ):null}
                             {showbutton && (
                               <div className="col-lg-4 mt-2 text-lg-right">
                                 <Link
