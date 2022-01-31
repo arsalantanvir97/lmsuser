@@ -185,10 +185,7 @@ const Header = () => {
                     <img src="images/nav-user.png" className="mr-1" />
                     My Profile
                   </Link>
-                  <Link to="/NewsLetterSubscription" className="dropdown-item">
-                    <img src="images/nav-news.png" className="mr-1" />
-                    Newsletter Subscriptions
-                  </Link>
+
                   <Link
                     onClick={logOutHandler}
                     className="dropdown-item"

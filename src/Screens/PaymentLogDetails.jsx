@@ -1,153 +1,168 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { baseURL } from "../utils/api";
 
-const PaymentLogDetails = () => {
+const PaymentLogDetails = (props) => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const [paymentdetails, setpaymentdetails] = useState();
+
+  useEffect(() => {
+    handleGetPaymentDetails();
+    console.log(props?.match?.params?.id);
+  }, []);
+
+  const handleGetPaymentDetails = async () => {
+    try {
+      const res = await axios({
+        url: `${baseURL}/payment/paymentDetails/${props?.match?.params?.id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+      console.log("res", res);
+      setpaymentdetails(res?.data?.payment);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
-    <div>
-      <section classname="admin-profile">
-        <div classname="app-content content">
-          <div classname="content-wrapper">
-            <div classname="content-body">
-              {"{"}/* Basic form layout section start */{"}"}
-              <section id="configuration user-management">
-                <div classname="row">
-                  <div classname="col-12">
-                    <div classname="card jost pad-20 pb-5 px-lg-4 px-2">
-                      <div classname="card-content collapse show">
-                        <div classname="card-body table-responsive card-dashboard">
-                          <a href="payment-logs.php">
-                            <h1 classname="main-heading">
-                              <i classname="fas fa-chevron-left">
-                                {" "}
-                                Payment Log Details
-                              </i>
-                            </h1>
-                            <i classname="fas fa-chevron-left"></i>
-                          </a>
-                          <i classname="fas fa-chevron-left">
-                            <div classname="clearfix">
-                              <div classname="dash-card-inner mt-4">
-                                <div classname="row">
-                                  <div classname="col-12">
-                                    <img
-                                      src="images/payment-log.png"
-                                      alt=""
-                                      classname="w-100 img-fluid"
-                                    />
-                                  </div>
+    <section className="admin-profile">
+      <div className="app-content content">
+        <div className="content-wrapper">
+          <div className="content-body">
+            {/* Basic form layout section start */}
+            <section id="configuration user-management">
+              <div className="row">
+                <div className="col-12">
+                  <div className="card jost pad-20 pb-5 px-lg-4 px-2">
+                    <div className="card-content collapse show">
+                      <div className="card-body table-responsive card-dashboard">
+                        <div className="row">
+                          <div className="col-12 text-right mt-2">
+                            <Link to="#" className="pending-btn">
+                              Pending
+                            </Link>
+                          </div>
+                        </div>
+                        <Link to="/PaymentLogs">
+                          <h1 className="main-heading">
+                            <i className="fas fa-chevron-left" /> Payment Log
+                            Details
+                          </h1>
+                        </Link>
+                        <div className="clearfix" />
+                        <div className="dash-card-inner mt-4">
+                          <div className="row">
+                            <div className="col-12">
+                              <img
+                                src="images/payment-log.png"
+                                alt=""
+                                className="w-100 img-fluid"
+                              />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-lg-6">
+                              <div className="row ">
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Course Code:
+                                  </label>
                                 </div>
-                                <div classname="row">
-                                  <div classname="col-lg-6">
-                                    <div classname="row ">
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Course Code:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          Mark Carson
-                                        </p>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Course Title:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          Introduction to Software
-                                        </p>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Duration:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          03 Months
-                                        </p>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Valid Upto:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          02/01/2021
-                                        </p>
-                                      </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">
+                                    {paymentdetails?.courseid?.coursecode}
+                                  </p>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Course Title:
+                                  </label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">
+                                    {paymentdetails?.courseid?.coursetitle}
+                                  </p>
+                                </div>
+                                {paymentdetails?.appointmentid && (
+                                  <>
+                                    <div className="col-lg-6 mt-2">
+                                      <label className="all-label22">
+                                        Date &amp; Time:
+                                      </label>
                                     </div>
-                                  </div>
-                                  <div classname="col-lg-6">
-                                    <div classname="row ">
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Category:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          Abc Category
-                                        </p>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Cost:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">$100</p>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Date Registered:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          02/01/2021
-                                        </p>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <label classname="all-label22">
-                                          Payment Date:
-                                        </label>
-                                      </div>
-                                      <div classname="col-lg-6 mt-2">
-                                        <p classname="label-value22">
-                                          02/01/2021
-                                        </p>
-                                      </div>
+                                    <div className="col-lg-6 mt-2">
+                                      <p className="label-value22">
+                                        {paymentdetails?.appointmentid
+                                          ?.appointmentdate +
+                                          ", " +
+                                          paymentdetails?.appointmentid
+                                            ?.appointmenttime}
+                                      </p>
                                     </div>
-                                  </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                            <div className="col-lg-6">
+                              <div className="row ">
+                                {paymentdetails?.appointmentid && (
+                                  <>
+                                    <div className="col-lg-6 mt-2">
+                                      <label className="all-label22">
+                                        Appointment Type:
+                                      </label>
+                                    </div>
+                                    <div className="col-lg-6 mt-2">
+                                      <p className="label-value22">
+                                        {paymentdetails?.appointmentid?.type}
+                                      </p>
+                                    </div>
+                                  </>
+                                )}
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">Cost:</label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">
+                                    ${paymentdetails?.cost}
+                                  </p>
                                 </div>
                               </div>
                             </div>
-                          </i>
+                          </div>
+                          <div className="row">
+                            {paymentdetails?.appointmentid && (
+                              <>
+                                <div className="col-lg-3 mt-2">
+                                  <label className="all-label22">
+                                    Description:
+                                  </label>
+                                </div>
+                                <div className="col-lg-9 mt-2">
+                                  <p className="label-value22">
+                                    {paymentdetails?.appointmentid?.description}
+                                  </p>
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
-                        <i classname="fas fa-chevron-left"></i>
                       </div>
-                      <i classname="fas fa-chevron-left"></i>
                     </div>
-                    <i classname="fas fa-chevron-left"></i>
                   </div>
-                  <i classname="fas fa-chevron-left"></i>
                 </div>
-              </section>
-              <i classname="fas fa-chevron-left">
-                {"{"}/* // Basic form layout section end */{"}"}
-              </i>
-            </div>
-            <i classname="fas fa-chevron-left"></i>
+              </div>
+            </section>
+            {/* // Basic form layout section end */}
           </div>
-          <i classname="fas fa-chevron-left"></i>
         </div>
-        <i classname="fas fa-chevron-left"></i>
-      </section>
-      <i classname="fas fa-chevron-left"></i>
-    </div>
+      </div>
+    </section>
   );
 };
 

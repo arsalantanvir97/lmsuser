@@ -32,7 +32,7 @@ const Certificate = () => {
                         </div>
                         <div className="clearfix" />
                         <div className="maain-tabble">
-                          <table className="table table-striped table-bordered zero-configuration">
+                          <table className="table table-striped table-bordered ">
                             <thead>
                               <tr>
                                 <th className="d-grey bold">S.No</th>

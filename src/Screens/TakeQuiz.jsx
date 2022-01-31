@@ -10,7 +10,7 @@ import QuizItem from "./QuizItem";
 import QuizPagination from "../components/QuizPagination";
 let correctmarks = 0;
 let countdown;
-const TakeQuiz = ({ match }) => {
+const TakeQuiz = ({ match, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [quizzes, setquizzes] = useState([]);
@@ -27,6 +27,7 @@ const TakeQuiz = ({ match }) => {
 
   useEffect(() => {
     getQuizHandler();
+    console.log(match?.params?.id);
   }, [page, perPage, from, to, status, searchString]);
   function countDownHandler2() {
     setenable(true);
@@ -37,6 +38,7 @@ const TakeQuiz = ({ match }) => {
       showConfirmButton: false,
       timer: 1500
     });
+    window.location.reload();
   }
   function countDownHandler() {
     setTimeout(countDownHandler2, countdown);
@@ -61,8 +63,9 @@ const TakeQuiz = ({ match }) => {
       });
       console.log("setlecturedetails", res);
       setquizzes(res?.data?.quiz);
+      setenablenextque(false);
       countdown = res?.data?.quiz?.docs?.[0]?.quizduration * 60000;
-      correctmarks=0
+      correctmarks = 0;
       countDownHandler();
     } catch (error) {
       Toasty("error", `Something went wrong`);
@@ -100,6 +103,17 @@ const TakeQuiz = ({ match }) => {
         showConfirmButton: false,
         timer: 1500
       });
+      if (quizzes?.totalDocs == page) {
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: `Congratulations! You have successfully cleard all the quizzes`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        history?.push("/Profile");
+      }
+      setPage(page + 1);
     } else {
       setenablenextque(false);
       await Swal.fire({
@@ -109,7 +123,6 @@ const TakeQuiz = ({ match }) => {
         showConfirmButton: false,
         timer: 1500
       });
-     
     }
     setInputfields([]);
   };
@@ -324,18 +337,17 @@ const TakeQuiz = ({ match }) => {
                                 </div>
                               </>
                             ))}
-                            <QuizPagination
-                              totalDocs={quizzes?.totalDocs}
-                              totalPages={quizzes?.totalPages}
-                              currentPage={quizzes?.page}
-                              setPage={setPage}
-                              enablenextque={enablenextque}
-                              setenablenextque={setenablenextque}
-                              alertHandler={alertHandler}
-                              
-                              hasNextPage={quizzes?.hasNextPage}
-                              hasPrevPage={quizzes?.hasPrevPage}
-                            />
+                          {/* <QuizPagination
+                            totalDocs={quizzes?.totalDocs}
+                            totalPages={quizzes?.totalPages}
+                            currentPage={quizzes?.page}
+                            setPage={setPage}
+                            enablenextque={enablenextque}
+                            setenablenextque={setenablenextque}
+                            alertHandler={alertHandler}
+                            hasNextPage={quizzes?.hasNextPage}
+                            hasPrevPage={quizzes?.hasPrevPage}
+                          /> */}
                         </div>
                       </div>
                     </div>

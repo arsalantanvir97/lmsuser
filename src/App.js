@@ -32,7 +32,7 @@ const App = () => {
       <PrivateRoute exact path="/OfferedCourses" component={OfferedCourses} />{" "}
       <PrivateRoute
         exact
-        path="/PaymentLogDetails"
+        path="/PaymentLogDetails:id"
         component={PaymentLogDetails}
       />{" "}
       <PrivateRoute exact path="/PaymentLogs" component={PaymentLogs} />{" "}
