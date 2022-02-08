@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -44,7 +45,7 @@ const PaymentLogDetails = (props) => {
                         <div className="row">
                           <div className="col-12 text-right mt-2">
                             <Link to="#" className="pending-btn">
-                              Pending
+                              Paid
                             </Link>
                           </div>
                         </div>
@@ -87,6 +88,59 @@ const PaymentLogDetails = (props) => {
                                   <p className="label-value22">
                                     {paymentdetails?.courseid?.coursetitle}
                                   </p>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Duration:
+                                  </label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">
+                                    {" "}
+                                    {paymentdetails?.duration}
+                                  </p>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Valid Upto:
+                                  </label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">{moment.utc(paymentdetails?.expirydate).format("LL")}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-lg-6">
+                              <div className="row ">
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Category:
+                                  </label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">{paymentdetails?.courseid?.coursecategory?.name}</p>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">Cost:</label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">${paymentdetails?.cost}</p>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Date Registered:
+                                  </label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">{moment.utc(paymentdetails?.createdAt).format("LL")}</p>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <label className="all-label22">
+                                    Payment Date:
+                                  </label>
+                                </div>
+                                <div className="col-lg-6 mt-2">
+                                  <p className="label-value22">{moment.utc(paymentdetails?.createdAt).format("LL")}</p>
                                 </div>
                                 {paymentdetails?.appointmentid && (
                                   <>

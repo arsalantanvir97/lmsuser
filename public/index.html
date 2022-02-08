@@ -138,6 +138,53 @@
     src="%PUBLIC_URL%/app-assets/vendors/js/charts/echarts/echarts.js"
     type="text/javascript"
   ></script>
+  <script uid="12" src="%PUBLIC_URL%/assets/js/ocs.js" async></script>
+  <script>
+    $(document).ready(function () {
+      $(document).click(function (event) {
+        //alert('ok');
+
+        var click = $(event.target);
+
+        !0 !== $("header .collapse").hasClass("show") ||
+          click.hasClass("header navbar-toggler") ||
+          $("header .navbar-toggler").click();
+      });
+
+      if ($("#featured_product")) {
+        window.onscroll = function () {
+          addScroll();
+        };
+      }
+
+      // function addScroll() {
+
+      // if ($('#liked').isInViewport()) {
+
+      // $('#featured_product').removeClass('stickIt')
+
+      // } else {
+
+      // $('#featured_product').addClass('stickIt')
+
+      // }
+
+      // }
+
+      $.fn.isInViewport = function () {
+        var elementTop = $(this).offset().top;
+
+        var elementBottom = elementTop + $(this).outerHeight();
+
+        var viewportTop = $(window).scrollTop();
+
+        var viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+      };
+    });
+  </script>
+    <script type="text/javascript" src="//cdn.voximplant.com/edge/voximplant.min.js"></script>
 
   <!-- BEGIN VENDOR JS-->
   <!-- BEGIN PAGE VENDOR JS-->

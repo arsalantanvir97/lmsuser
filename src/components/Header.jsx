@@ -84,9 +84,9 @@ const Header = () => {
                 id="hoverbell"
               >
                 {" "}
-                <a className="nav-link py-0 nav-link-label mt-2" href="#_">
+                <Link to='#' className="nav-link py-0 nav-link-label mt-2" >
                   <i className="fas fa-comments top-not-belll" />
-                </a>
+                </Link>
               </li>
               <li
                 className="dropdown dropdown-notification nav-item"

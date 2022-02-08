@@ -75,7 +75,7 @@ const CoursePayment = (props) => {
       response.data.receipt_email
     );
     const res = await axios.post(
-      `${baseURL}/registeredCourses/createregisteredCourses`,
+      `${baseURL}/registeredCourses/registerEmployee`,
       {
         userid: userInfo?._id,
         courseid: course?._id,

@@ -8,6 +8,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { LoaderName } from "react-awesome-loaders";
+import { createCall } from "../config/vox";
 
 const Appointments = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -49,6 +50,7 @@ const Appointments = () => {
       console.log("err", err);
     }
   };
+
   return (
     <div className="app-content content">
       <div className="content-wrapper">
@@ -130,16 +132,32 @@ const Appointments = () => {
                                   <td>{userapp?.appointmenttime}</td>
                                   <td>${userapp?.cost}</td>
                                   <td>
-                                    <p className="accepted">
-                                      {" "}
-                                      {userapp?.type == "audiocall"
-                                        ? "Join Audio Call"
-                                        : userapp?.type == "videocall"
-                                        ? "Join Video Call"
-                                        : userapp?.type == "chat"
-                                        ? "Join Chat"
-                                        : null}
-                                    </p>
+                                    <Link
+                                      to={
+                                        userapp?.status == "Pending"
+                                          ? null
+                                          : userapp?.type == "chat"
+                                          ? "/ChatScreen"
+                                          :   userapp?.type == "videocall"
+                                          ? null:null
+                                      }
+                                    >
+                                      <p className="accepted">
+                                        {" "}
+                                        {userapp?.status == "Pending"
+                                          ? "Pending"
+                                          : userapp?.status ==
+                                            "Reschedule Request"
+                                          ? "Reschedule Request"
+                                          : userapp?.type == "audiocall"
+                                          ? "Join Audio Call"
+                                          : userapp?.type == "videocall"
+                                          ? "Join Video Call"
+                                          : userapp?.type == "chat"
+                                          ? "Join Chat"
+                                          : null}
+                                      </p>
+                                    </Link>
                                   </td>
                                 </tr>
                               ))}

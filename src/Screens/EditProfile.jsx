@@ -42,7 +42,7 @@ console.log('image',image);
                   <div className="card-content collapse show">
                     <div className="card-body table-responsive card-dashboard">
                       {is_edit ? (
-                        <Link to="/ChangePassword">
+                        <Link to="/Profile">
                           <h1 className="main-heading">
                             <i className="fas fa-chevron-left" /> Edit Profile
                           </h1>

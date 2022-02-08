@@ -42,6 +42,7 @@ const ViewLecture = () => {
     try {
       const res = await axios({
         url: `${baseURL}/registeredCourses/registeredcoursesDetails/${courseid}`,
+        params:{userid:userInfo?._id},
         method: "GET",
         headers: {
           Authorization: `Bearer ${userInfo.token}`

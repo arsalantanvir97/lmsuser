@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Toasty from "../utils/toast";
 import templateHTML from '../utils/templateHTML'
 let courseid;
-const Lectures = () => {
+const RegisteredCourseLecture = ({match}) => {
   const [registeredCourses, setregisteredCourses] = useState();
   const [coursedetails, setcoursedetails] = useState();
 
@@ -14,7 +14,27 @@ const Lectures = () => {
   const { userInfo } = userLogin;
   useEffect(() => {
     getttingReisteredCourses();
+    registeredCourseDetails()
   }, []);
+
+
+  const registeredCourseDetails = async () => {
+    console.log("courseid");
+    try {
+      const res = await axios({
+        url: `${baseURL}/registeredCourses/registeredcoursesDetails/${match?.params?.id}`,
+        params:{userid:userInfo?._id},
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+      console.log("courseDetailsres", res);
+      setcoursedetails(res?.data?.registeredCourse);
+    } catch (error) {
+      Toasty("error", `Something went wrong`);
+    }
+  };
 
   const getttingReisteredCourses = async () => {
     const res = await axios.post(
@@ -163,17 +183,17 @@ const Lectures = () => {
                                   </a>
                                 </li>
                                 <li className="nav-item" role="presentation">
-                                  <Link 
+                                  <a
                                     className="nav-link"
                                     id="pills-lectures-tab"
                                     data-toggle="pill"
-                                    to={`/ViewLecture${coursedetails?._id}`}
+                                    href="#pills-lectures"
                                     role="tab"
                                     aria-controls="pills-lectures"
                                     aria-selected="false"
                                   >
                                     Lectures
-                                  </Link>
+                                  </a>
                                 </li>
                               </ul>
                             </div>
@@ -249,4 +269,4 @@ const Lectures = () => {
   );
 };
 
-export default Lectures;
+export default RegisteredCourseLecture;

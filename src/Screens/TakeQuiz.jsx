@@ -29,6 +29,21 @@ const TakeQuiz = ({ match, history }) => {
     getQuizHandler();
     console.log(match?.params?.id);
   }, [page, perPage, from, to, status, searchString]);
+  const updateCourseFailiure = async () => {
+    console.log("courseid");
+    try {
+      const res = await axios({
+        url: `${baseURL}/registeredCourses/updateRegisteredCourseFail/${match?.params?.id}`,
+        method: "GET",
+        params:{userid:userInfo?._id},
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+    } catch (error) {
+      Toasty("error", `Something went wrong`);
+    }
+  };
   function countDownHandler2() {
     setenable(true);
     Swal.fire({
@@ -44,7 +59,7 @@ const TakeQuiz = ({ match, history }) => {
     setTimeout(countDownHandler2, countdown);
   }
   const getQuizHandler = async () => {
-    console.log("courseid");
+    console.log("getQuizHandler");
     try {
       const res = await axios({
         url: `${baseURL}/quiz/quizzCourseid/${match?.params?.id}`,
@@ -65,22 +80,40 @@ const TakeQuiz = ({ match, history }) => {
       setquizzes(res?.data?.quiz);
       setenablenextque(false);
       countdown = res?.data?.quiz?.docs?.[0]?.quizduration * 60000;
+      console.log("countdown", countdown);
       correctmarks = 0;
-      countDownHandler();
+      if (res?.data?.quiz?.docs?.length > 0) countDownHandler();
     } catch (error) {
       Toasty("error", `Something went wrong`);
     }
   };
-  const handlechangeinput = (index, event, value) => {
-    console.log("event.target.value", event.target.value, value);
+  const handlechangeinput = (index, event) => {
+    console.log("event.target.value",index, event.target.value);
     const values = [...inputfields];
-    values[index] = value;
+    values[index] = event.target.value;
 
     setInputfields(values);
   };
   useEffect(() => {
     console.log("inputfields", inputfields);
   }, [inputfields]);
+
+  const updateCourseSuccess = async () => {
+    console.log("updateCourseSuccess");
+    try {
+      const res = await axios({
+        url: `${baseURL}/registeredCourses/updateRegisteredCourse/${match?.params?.id}`,
+        method: "GET",
+        params:{userid:userInfo?._id},
+
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      });
+    } catch (error) {
+      Toasty("error", `Something went wrong`);
+    }
+  };
 
   const submitQuizHandler = async () => {
     console.log("submitQuizHandler", quizzes?.docs?.[0]?.quizinfo?.length);
@@ -103,6 +136,8 @@ const TakeQuiz = ({ match, history }) => {
         showConfirmButton: false,
         timer: 1500
       });
+      setInputfields([]);
+
       if (quizzes?.totalDocs == page) {
         Swal.fire({
           icon: "success",
@@ -111,6 +146,8 @@ const TakeQuiz = ({ match, history }) => {
           showConfirmButton: false,
           timer: 1500
         });
+        await updateCourseSuccess();
+
         history?.push("/Profile");
       }
       setPage(page + 1);
@@ -123,6 +160,7 @@ const TakeQuiz = ({ match, history }) => {
         showConfirmButton: false,
         timer: 1500
       });
+      await updateCourseFailiure();
     }
     setInputfields([]);
   };
@@ -135,6 +173,7 @@ const TakeQuiz = ({ match, history }) => {
       timer: 1500
     });
   };
+
   return (
     <>
       <section className="admin-profile">
@@ -153,7 +192,7 @@ const TakeQuiz = ({ match, history }) => {
                               <h1 className="main-heading">Quiz</h1>
                             </div>
                           </div>
-                          {quizzes?.docs?.length > 0 &&
+                          {quizzes?.docs?.length > 0 ? (
                             quizzes?.docs?.map((quiz, index) => (
                               <>
                                 <div className="row">
@@ -188,7 +227,47 @@ const TakeQuiz = ({ match, history }) => {
                                                 <p className="question">
                                                   {quizzz?.quizquestion}
                                                 </p>
-                                                <div className="mt-3">
+                                                <div className="mt-2">
+                                                  <select
+                                                    name
+                                                    id
+                                                    className="genaral-select"
+                                                    onChange={(event) =>
+                                                      handlechangeinput(
+                                                        index,
+                                                        event,
+                                                        
+                                                      )
+                                                    }
+                                                  >
+                                                    <option value>
+                                                      select
+                                                    </option>
+                                                    {/* <option value>All</option> */}
+
+                                                    <option
+                                                     value={1}
+                                                    >
+                                                      {quizzz?.quizoption1}
+                                                    </option>
+                                                    <option
+                                                      value={2}
+                                                    >
+                                                      {quizzz?.quizoption2}
+                                                    </option>
+                                                    <option
+                                                     value={3}
+                                                    >
+                                                      {quizzz?.quizoption3}
+                                                    </option>
+                                                    <option
+                                                      value={4}
+                                                    >
+                                                      {quizzz?.quizoption4}
+                                                    </option>
+                                                  </select>
+                                                </div>
+                                                {/* <div className="mt-3">
                                                   <p className="mt-1">
                                                     <input
                                                       type="radio"
@@ -306,8 +385,7 @@ const TakeQuiz = ({ match, history }) => {
                                                     </label>
                                                   </p>
 
-                                                  {/* <QuizItem quizzz={quizzz} handlechangeinput={handlechangeinput} index={index}/> */}
-                                                </div>
+                                                </div> */}
                                               </div>
                                             </div>
                                           </div>
@@ -336,7 +414,17 @@ const TakeQuiz = ({ match, history }) => {
                                   </form>
                                 </div>
                               </>
-                            ))}
+                            ))
+                          ) : (
+                            <>
+                              {" "}
+                              <div className="col-12 text-center">
+                                <h6 className="mt-5 main-heading">
+                                  No Quiz Found
+                                </h6>
+                              </div>
+                            </>
+                          )}
                           {/* <QuizPagination
                             totalDocs={quizzes?.totalDocs}
                             totalPages={quizzes?.totalPages}

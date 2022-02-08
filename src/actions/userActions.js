@@ -44,12 +44,42 @@ export const userSignUpAction = (body, history) => async (dispatch) => {
     });
   }
 };
+export const employeeSignUpAction = (body, history) => async (dispatch) => {
+  try {
+    // dispatch({
+    //   type: ADMIN_LOGIN_REQUEST,
+    // })
+    console.log("employeeSignUpAction");
+
+    const res = await axios.post(`${baseURL}/user/registerEmployee`, body);
+
+    console.log("userLoginActionres", res);
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: res?.data,
+    });
+
+    localStorage.setItem("userInfo", JSON.stringify(res?.data));
+    history?.replace("/Profile");
+  } catch (error) {
+    console.log("error", error);
+    Toasty("error", error?.response?.data?.message);
+
+    dispatch({
+      type: USER_LOGIN_FAIL,
+      payload: error,
+    });
+  }
+};
+
+
 export const userLoginAction =
   (email, password,confirmpassword, history) => async (dispatch) => {
     try {
       console.log("userLoginAction");
 
-      const body = { email, password,confirmpassword };
+      const body = { email,type:'Student', password,confirmpassword };
 
       const res = await api.post("/user/authUser", body);
 
@@ -212,6 +242,41 @@ export const updateUserInfoAction = (body) => async (dispatch, getState) => {
     });
   }
 };
+
+export const handleModal =
+  (status, videoStatus, incommmingCall, isOutgoing) => (dispatch) => {
+    dispatch({
+      type: "HANDLE_MODAL",
+      payload: status,
+    });
+    dispatch({
+      type: "HANDLE_IS_VIDEO",
+      payload: videoStatus,
+    });
+    dispatch({
+      type: "HANDLE_INCOMMING_CALL",
+      payload: incommmingCall,
+    });
+    dispatch({
+      type: "HANDLE_OUTGOING",
+      payload: isOutgoing,
+    });
+  };
+
+export const setCallState = (status) => (dispatch) => {
+  dispatch({
+    type: "HANDLE_CALL_STATE",
+    payload: status,
+  });
+};
+
+export const setMuteState = (status) => (dispatch) => {
+  dispatch({
+    type: "HANDLE_MUTE_STATE",
+    payload: status,
+  });
+};
+
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userInfo");

@@ -128,10 +128,10 @@ const RegistrationCourses = () => {
                                     {moment.utc(reg?.expiryDate).format("LL")}
                                   </td>
                                   <td>
-                                    <p className="clr-orange">Pending</p>
+                                    <p className="clr-orange">Valid</p>
                                   </td>
                                   <td>
-                                    <p className="dark-blue">View Lectures</p>
+                                    <Link to={`/RegisteredCourseLecture${reg?.courseid?._id}`} className="dark-blue">View Lectures</Link>
                                   </td>
                                 </tr>
                               ))}

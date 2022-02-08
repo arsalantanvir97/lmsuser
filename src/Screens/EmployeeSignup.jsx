@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { userSignUpAction } from "../actions/userActions";
+import { employeeSignUpAction } from "../actions/userActions";
 import Swal from "sweetalert2";
 import api from "../utils/api";
 import Toasty from "../utils/toast";
@@ -9,9 +9,13 @@ import Toasty from "../utils/toast";
 import ImageSelector from "../components/ImageSelector";
 import "react-toastify/dist/ReactToastify.css";
 
-const Signup = ({history}) => {
+const EmployeeSignup = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  useEffect(() => {
+    console.log("match", match);
+  }, []);
+
   useEffect(() => {
     if (userInfo) {
       history.replace("/Profile");
@@ -22,22 +26,28 @@ const Signup = ({history}) => {
   const [confirmpassword, setconfirmpassword] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [type, settype] = useState("Student");
+  const [type, settype] = useState('Student');
 
   const [is_edit, setIsEdit] = useState(true);
   const dispatch = useDispatch();
 
   const registerUserHandler = async () => {
     const formData = new FormData();
-
+    let enterpriseid = match?.params?.id;
+    let courseid = match?.params?.course;
+console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
     formData.append("user_image", image);
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("type", type);
+    formData.append("enterpriseid", enterpriseid);
+    formData.append("courseid", courseid);
+
     formData.append("confirmpassword", confirmpassword);
 
-    await dispatch(userSignUpAction(formData,history));  };
+    await dispatch(employeeSignUpAction(formData, history));
+  };
   return (
     <section className="admin-login ad-log">
       <div className="container">
@@ -117,7 +127,24 @@ const Signup = ({history}) => {
                     }}
                   />
                 </div>
-               
+                {/* <div className="form-group position-relative userss">
+                  <label htmlFor>
+                    Signup As<span className="red-star">*</span>
+                  </label>
+                  <select
+                    name
+                    id
+                    className="form-control w-90 mb-0"
+                    value={type}
+                    onChange={(e) => {
+                      settype(e.target.value);
+                    }}
+                  >
+                    <option value>Select</option>
+                    <option value={"Student"}>Student</option>
+                    <option value={"Enterprise"}>Enterprise</option>
+                  </select>
+                </div> */}
                 <div className="form-group position-relative mb-1">
                   <label htmlFor>
                     Password<span className="red-star">*</span>
@@ -164,7 +191,7 @@ const Signup = ({history}) => {
                 </div>
                 <div className="text-md-left text-center pb-md-0 pb-2">
                   <button
-                    onClick={()=>
+                    onClick={() =>
                       username?.length > 0 &&
                       email?.length > 0 &&
                       confirmpassword?.length > 0 &&
@@ -191,24 +218,7 @@ const Signup = ({history}) => {
                     Already Registerd? Login
                   </Link>
                   <Link
-                    onClick={() => {
-                      window.open(
-                        "https://dev74.onlinetestingserver.com/LMS/enterprise/SignUp"
-                      );
-                    }}
                     to="#"
-                    className="register-link d-flex align-items-center justify-content-center mt-3"
-                  >
-                    Want to register as a Enterprise? Click Here
-                  </Link>
-                  <Link
-                  onClick={() => {
-                    window.open(
-                      "https://dev74.onlinetestingserver.com/LMS/home"
-                    );
-                  }}
-                    to="#"
-                   
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
                   >
                     <img
@@ -227,4 +237,4 @@ const Signup = ({history}) => {
   );
 };
 
-export default Signup;
+export default EmployeeSignup;
