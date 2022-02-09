@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { baseURL, imageURL } from "../utils/api";
 import { useSelector, useDispatch } from "react-redux";
 import Toasty from "../utils/toast";
+import Swal from "sweetalert2";
 let courseid;
-const ViewLecture = () => {
-  const [registeredCourses, setregisteredCourses] = useState();
+const ViewLecture = ({match,history}) => {
+  // const [registeredCourses, setregisteredCourses] = useState();
   const [coursedetails, setcoursedetails] = useState();
   const [lecturedetails, setlecturedetails] = useState();
   const [vidindex, setvidindex] = useState(0);
@@ -15,33 +16,32 @@ const ViewLecture = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   useEffect(() => {
-    getttingReisteredCourses();
+    // getttingReisteredCourses();
+    courseDetails()
   }, []);
 
-  const getttingReisteredCourses = async () => {
-    const res = await axios.post(
-      `${baseURL}/registeredCourses/getallResgisteredCoursesofUser`,
-      {
-        id: userInfo?._id
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      }
-    );
-    console.log("res", res);
-    setregisteredCourses(res?.data?.registeredcourses);
-  };
-  useEffect(() => {
-    console.log("courseid", courseid);
-  }, [courseid]);
+  // const getttingReisteredCourses = async () => {
+  //   const res = await axios.post(
+  //     `${baseURL}/registeredCourses/getallResgisteredCoursesofUser`,
+  //     {
+  //       id: userInfo?._id
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${userInfo.token}`
+  //       }
+  //     }
+  //   );
+  //   console.log("res", res);
+  //   setregisteredCourses(res?.data?.registeredcourses);
+  // };
+
 
   const courseDetails = async () => {
-    console.log("courseid");
+    console.log("courseid",match?.params?.id);
     try {
       const res = await axios({
-        url: `${baseURL}/registeredCourses/registeredcoursesDetails/${courseid}`,
+        url: `${baseURL}/registeredCourses/registeredcoursesDetails/${match?.params?.id}`,
         params:{userid:userInfo?._id},
         method: "GET",
         headers: {
@@ -49,6 +49,16 @@ const ViewLecture = () => {
         }
       });
       console.log("courseDetailsres", res);
+      if(res?.data?.registeredCourse?.expired==true){
+       await Swal.fire({
+          icon: "info",
+          title: "",
+          text: `Your Course has expiired. Please register again to view lecture`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        history?.push('/RegistrationCourses')
+      }
       setcoursedetails(res?.data?.registeredCourse);
       lectureDetails();
     } catch (error) {
@@ -57,10 +67,10 @@ const ViewLecture = () => {
   };
 
   const lectureDetails = async () => {
-    console.log("courseid");
+    console.log("courseid2",match?.params?.id);
     try {
       const res = await axios({
-        url: `${baseURL}/lecture/lectureDetailsbyCourseid/${courseid}`,
+        url: `${baseURL}/lecture/lectureDetailsbyCourseid/${match?.params?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${userInfo.token}`
@@ -92,7 +102,7 @@ const ViewLecture = () => {
                   <div className="card-content collapse show">
                     <div className="card-body table-responsive card-dashboard">
                       <h1 className="main-heading">Lectures</h1>
-                      <div className="row my-2 ">
+                      {/* <div className="row my-2 ">
                         <div className="col-lg-3 userss">
                           <p className="label-value mb-1">Course</p>
                           <select
@@ -114,13 +124,14 @@ const ViewLecture = () => {
                               ))}
                           </select>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="clearfix" />
                       {coursedetails?.createdAt?.length > 0 && (
                         <>
                           <div className="row">
                             <div className="col-12">
-                              <h3 className="course-dtl">Course Details</h3>
+
+                              <h3 className="mt-3 course-dtl">Course Details</h3>
                             </div>
                           </div>
                           <div className="row mt-2">

@@ -163,6 +163,16 @@ const PaymentLogs = () => {
                           </tbody>
                         </table>
                       </div>
+                      {registeredcourses?.docs?.length > 0 && (
+                        <Pagination
+                          totalDocs={registeredcourses?.totalDocs}
+                          totalPages={registeredcourses?.totalPages}
+                          currentPage={registeredcourses?.page}
+                          setPage={setPage}
+                          hasNextPage={registeredcourses?.hasNextPage}
+                          hasPrevPage={registeredcourses?.hasPrevPage}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>

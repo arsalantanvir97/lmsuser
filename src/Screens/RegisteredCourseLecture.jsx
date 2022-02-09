@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { baseURL } from "../utils/api";
 import { useSelector, useDispatch } from "react-redux";
 import Toasty from "../utils/toast";
-import templateHTML from '../utils/templateHTML'
+import templateHTML from "../utils/templateHTML";
+import Swal from "sweetalert2";
 let courseid;
-const RegisteredCourseLecture = ({match}) => {
+const RegisteredCourseLecture = ({ match }) => {
   const [registeredCourses, setregisteredCourses] = useState();
   const [coursedetails, setcoursedetails] = useState();
 
@@ -14,16 +15,15 @@ const RegisteredCourseLecture = ({match}) => {
   const { userInfo } = userLogin;
   useEffect(() => {
     getttingReisteredCourses();
-    registeredCourseDetails()
+    registeredCourseDetails();
   }, []);
-
 
   const registeredCourseDetails = async () => {
     console.log("courseid");
     try {
       const res = await axios({
         url: `${baseURL}/registeredCourses/registeredcoursesDetails/${match?.params?.id}`,
-        params:{userid:userInfo?._id},
+        params: { userid: userInfo?._id },
         method: "GET",
         headers: {
           Authorization: `Bearer ${userInfo.token}`
@@ -60,7 +60,7 @@ const RegisteredCourseLecture = ({match}) => {
     try {
       const res = await axios({
         url: `${baseURL}/registeredCourses/registeredcoursesDetails/${courseid}`,
-        params:{userid:userInfo?._id},
+        params: { userid: userInfo?._id },
         method: "GET",
         headers: {
           Authorization: `Bearer ${userInfo.token}`
@@ -70,6 +70,44 @@ const RegisteredCourseLecture = ({match}) => {
       setcoursedetails(res?.data?.registeredCourse);
     } catch (error) {
       Toasty("error", `Something went wrong`);
+    }
+  };
+  const generateCertificateHandler = async (reg) => {
+    console.log("generateCertificateHandler");
+    try {
+      if (reg?.certificategenerated == true) {
+        await Swal.fire({
+          icon: "info",
+          title: "",
+          text: `Certificate Already Generated`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      } else {
+        const res = await axios.post(
+          `${baseURL}/user/generateCertificate`,
+          {
+            email: reg?.userid?.email,
+            reg: reg
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`
+            }
+          }
+        );
+        console.log("res", res);
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: `Certificate has been sent been sent to ${reg?.userid?.email} email`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+      window?.location?.reload();
+    } catch (error) {
+      console.log("err", error);
     }
   };
   return (
@@ -110,7 +148,7 @@ const RegisteredCourseLecture = ({match}) => {
                         <div className="col-lg-9 text-right">
                           {coursedetails?.createdAt?.length > 0 && (
                             <Link
-                              to={`/ViewLecture${coursedetails?._id}`}
+                              to={`/ViewLecture${coursedetails?.courseid?._id}`}
                               className="gren-btn d-inline-block"
                             >
                               View Lectures
@@ -233,19 +271,25 @@ const RegisteredCourseLecture = ({match}) => {
                                       </p>
                                     </div>
                                   </div>
-                                  {coursedetails?.certificate && (
+                                  {coursedetails?.certificate == true &&
+                                  coursedetails?.certificategenerated ==
+                                    false ? (
                                     <div className="row">
                                       <div className="col-12 text-center mt-5">
                                         <Link
                                           to="#"
-                                          onClick={()=>{templateHTML(userInfo?.username,coursedetails?.completionDate,coursedetails?.courseid?.coursetitle)}}
+                                          onClick={() => {
+                                            generateCertificateHandler(
+                                              coursedetails
+                                            );
+                                          }}
                                           className="gren-btn d-inline-block"
                                         >
                                           Generate Certificate
                                         </Link>
                                       </div>
                                     </div>
-                                  )}
+                                  ) : null}
                                 </div>
                               </div>
                             </div>

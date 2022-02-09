@@ -201,6 +201,11 @@ const Login = ({ history }) => {
                     Are You a new user? Register
                   </Link>
                   <Link
+                  onClick={() => {
+                    window.open(
+                      "https://dev74.onlinetestingserver.com/LMS/home"
+                    );
+                  }}
                     to="#"
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
                   >

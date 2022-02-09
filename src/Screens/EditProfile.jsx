@@ -82,7 +82,9 @@ console.log('image',image);
                                   }}
                                 />
                               ) : (
-                                <p>{username}</p>
+                                <div className="col-lg-9">
+                                <p className="label-value2 profilee-lbll">{username}</p>
+                                </div>
                               )}
                             </div>
                             <div className="col-lg-3">

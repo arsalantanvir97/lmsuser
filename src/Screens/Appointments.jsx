@@ -164,6 +164,16 @@ const Appointments = () => {
                           </tbody>
                         </table>
                       </div>
+                      {userappointments?.docs?.length > 0 && (
+                        <Pagination
+                          totalDocs={userappointments?.totalDocs}
+                          totalPages={userappointments?.totalPages}
+                          currentPage={userappointments?.page}
+                          setPage={setPage}
+                          hasNextPage={userappointments?.hasNextPage}
+                          hasPrevPage={userappointments?.hasPrevPage}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>

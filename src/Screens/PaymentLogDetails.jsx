@@ -89,6 +89,8 @@ const PaymentLogDetails = (props) => {
                                     {paymentdetails?.courseid?.coursetitle}
                                   </p>
                                 </div>
+                                {!paymentdetails?.appointmentid && (
+                                  <>
                                 <div className="col-lg-6 mt-2">
                                   <label className="all-label22">
                                     Duration:
@@ -99,7 +101,7 @@ const PaymentLogDetails = (props) => {
                                     {" "}
                                     {paymentdetails?.duration}
                                   </p>
-                                </div>
+                                </div></>)}
                                 <div className="col-lg-6 mt-2">
                                   <label className="all-label22">
                                     Valid Upto:
