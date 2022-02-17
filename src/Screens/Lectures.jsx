@@ -110,6 +110,8 @@ const Lectures = () => {
                           <select
                             name
                             id
+                            size={2}
+                            // style={{minWidth:'100%'}}
                             className="form-control"
                             value={courseid}
                             onChange={(e) => {
@@ -117,7 +119,7 @@ const Lectures = () => {
                               courseDetails();
                             }}
                           >
-                            <option value>select</option>
+                            <option >select</option>
                             {registeredCourses?.length > 0 &&
                               registeredCourses?.map((reg) => (
                                 <option value={reg?.courseid?._id}>

@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userverfyadnresetpasword } from "../actions/userActions";
+import Toasty from "../utils/toast";
 const ChangePassword = ({ history }) => {
   const dispatch = useDispatch();
   const [existingpassword, setexistingpassword] = useState("");
   const [newpassword, setnewpassword] = useState("");
   const [confirm_password, setconfirm_password] = useState("");
+  const [showicon, setshowicon] = useState(true);
+  const [showicon2, setshowicon2] = useState(true);
+  const [showicon3, setshowicon3] = useState(true);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const submitHandler = async (e) => {
+  const submitHandler = async () => {
     console.log("submitHandler");
     console.log(
       "submitHandlerreqbody",
@@ -18,7 +22,6 @@ const ChangePassword = ({ history }) => {
       newpassword,
       confirm_password
     );
-    e.preventDefault();
     await dispatch(
       userverfyadnresetpasword(
         existingpassword,
@@ -56,7 +59,7 @@ const ChangePassword = ({ history }) => {
                             </label>
                             <div className="position-relative">
                               <input
-                                type="password"
+                                type={showicon ? "password" : "text"}
                                 className="form-control w-100 enter-input"
                                 id="exampleInputEmail1"
                                 aria-describedby="emailHelp"
@@ -67,7 +70,12 @@ const ChangePassword = ({ history }) => {
                                 }}
                               />
                               <i
-                                className="fa enter-icon right-icon fa-eye-slash"
+                                onClick={() => setshowicon(!showicon)}
+                                className={
+                                  showicon
+                                    ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                                    : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                                }
                                 aria-hidden="true"
                               />
                             </div>
@@ -80,7 +88,7 @@ const ChangePassword = ({ history }) => {
                             </label>
                             <div className="position-relative">
                               <input
-                                type="password"
+                                type={showicon2 ? "password" : "text"}
                                 className="form-control w-100 enter-input-2"
                                 id="exampleInputEmail1"
                                 aria-describedby="emailHelp"
@@ -91,7 +99,12 @@ const ChangePassword = ({ history }) => {
                                 }}
                               />
                               <i
-                                className="fa enter-icon-2 right-icon fa-eye-slash"
+                                onClick={() => setshowicon2(!showicon2)}
+                                className={
+                                  showicon2
+                                    ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                                    : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                                }
                                 aria-hidden="true"
                               />
                             </div>
@@ -104,7 +117,7 @@ const ChangePassword = ({ history }) => {
                             </label>
                             <div className="position-relative">
                               <input
-                                type="password"
+                                type={showicon3 ? "password" : "text"}
                                 className="form-control w-100 enter-input-3"
                                 id="exampleInputEmail1"
                                 aria-describedby="emailHelp"
@@ -115,7 +128,12 @@ const ChangePassword = ({ history }) => {
                                 }}
                               />
                               <i
-                                className="fa enter-icon-3 right-icon fa-eye-slash"
+                                onClick={() => setshowicon3(!showicon3)}
+                                className={
+                                  showicon3
+                                    ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                                    : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                                }
                                 aria-hidden="true"
                               />
                             </div>
@@ -126,7 +144,16 @@ const ChangePassword = ({ history }) => {
                         <div className="col-12 text-center">
                           <Link
                             to="#"
-                            onClick={submitHandler}
+                            onClick={() =>
+                              existingpassword?.length > 0 &&
+                              confirm_password?.length > 0 &&
+                              newpassword?.length > 0
+                                ? submitHandler()
+                                : Toasty(
+                                    "error",
+                                    `Please fill out all the required fields`
+                                  )
+                            }
                             className="green-btn"
                           >
                             Update

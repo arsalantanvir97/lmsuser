@@ -8,10 +8,13 @@ import Toasty from "../utils/toast";
 
 import ImageSelector from "../components/ImageSelector";
 import "react-toastify/dist/ReactToastify.css";
+import { validateEmail } from "../utils/ValidateEmail";
 
 const EmployeeSignup = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const [showicon, setshowicon] = useState(true);
+  const [showicon2, setshowicon2] = useState(true);
   useEffect(() => {
     console.log("match", match);
   }, []);
@@ -26,27 +29,38 @@ const EmployeeSignup = ({ history, match }) => {
   const [confirmpassword, setconfirmpassword] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [type, settype] = useState('Student');
+  const [type, settype] = useState("Student");
 
   const [is_edit, setIsEdit] = useState(true);
   const dispatch = useDispatch();
 
   const registerUserHandler = async () => {
-    const formData = new FormData();
-    let enterpriseid = match?.params?.id;
-    let courseid = match?.params?.course;
-console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
-    formData.append("user_image", image);
-    formData.append("username", username);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("type", type);
-    formData.append("enterpriseid", enterpriseid);
-    formData.append("courseid", courseid);
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
+      const formData = new FormData();
+      let enterpriseid = match?.params?.id;
+      let courseid = match?.params?.course;
+      console.log(
+        "enterpriseid courseid",
+        match?.params?.course,
+        match?.params?.id
+      );
+      formData.append("user_image", image);
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("type", type);
+      formData.append("enterpriseid", enterpriseid);
+      formData.append("courseid", courseid);
 
-    formData.append("confirmpassword", confirmpassword);
+      formData.append("confirmpassword", confirmpassword);
 
-    await dispatch(employeeSignUpAction(formData, history));
+      await dispatch(employeeSignUpAction(formData, history));
+    } else {
+      Toasty("error", `Please enter a valid email`);
+    }
   };
   return (
     <section className="admin-login ad-log">
@@ -151,7 +165,7 @@ console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
                   </label>
                   <div className="position-relative">
                     <input
-                      type="password"
+                      type={showicon ? "password" : "text"}
                       className="form-control w-90 enter-input"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -162,7 +176,12 @@ console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
                       }}
                     />
                     <i
-                      className="fa enter-icon right-icon fa-eye-slash right-icon-90"
+                      onClick={() => setshowicon(!showicon)}
+                      className={
+                        showicon
+                          ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                          : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                      }
                       aria-hidden="true"
                     />
                   </div>
@@ -173,7 +192,7 @@ console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
                   </label>
                   <div className="position-relative">
                     <input
-                      type="password"
+                      type={showicon2 ? "password" : "text"}
                       className="form-control w-90 enter-input-2"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -184,7 +203,12 @@ console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
                       }}
                     />
                     <i
-                      className="fa enter-icon-2 right-icon fa-eye-slash right-icon-90"
+                      onClick={() => setshowicon2(!showicon2)}
+                      className={
+                        showicon2
+                          ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                          : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                      }
                       aria-hidden="true"
                     />
                   </div>
@@ -218,11 +242,11 @@ console.log('enterpriseid courseid',match?.params?.course,match?.params?.id);
                     Already Registerd? Login
                   </Link>
                   <Link
-                  onClick={() => {
-                    window.open(
-                      "https://dev74.onlinetestingserver.com/LMS/home"
-                    );
-                  }}
+                    onClick={() => {
+                      window.open(
+                        "https://dev74.onlinetestingserver.com/LMS/home"
+                      );
+                    }}
                     to="#"
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
                   >

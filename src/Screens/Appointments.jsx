@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { baseURL, imageURL } from "../utils/api";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
 import Pagination from "../components/Padgination";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { LoaderName } from "react-awesome-loaders";
 import { createCall } from "../config/vox";
+import Calender from "../components/Calender";
 
 const Appointments = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -62,7 +63,7 @@ const Appointments = () => {
                 <div className="card user-management">
                   <div className="card-content collapse show">
                     <div className="card-body table-responsive card-dashboard">
-                      <h1 className="main-heading">Appointments</h1>
+                      <h1 className="main-heading mb-1">Appointments</h1>
                       <div className="clearfix" />
                       <div className="row">
                         <div className="col-12 text-right my-2">
@@ -74,37 +75,9 @@ const Appointments = () => {
                           </Link>
                         </div>
                       </div>
-                      <div className="row mt-1">
+                      <div className="row mb-1">
                         <div className="col-lg-6 col-12">
-                          <div className="d-flex align-items-center">
-                            <p className="l-grey source f-20 d-lg-inline-block">
-                              Sort By:
-                            </p>
-                            <div className="ml-2">
-                              <div
-                                role="wrapper"
-                                className="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"
-                              >
-                                <DatePicker
-                                  selected={from}
-                                  onChange={(from) => setFrom(from)}
-                                  className="sort-date customdate form-control"
-                                />
-                              </div>
-                            </div>
-                            <div className="ml-2">
-                              <div
-                                role="wrapper"
-                                className="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"
-                              >
-                                <DatePicker
-                                  selected={to}
-                                  onChange={(to) => setTo(to)}
-                                  className="sort-date customdate form-control"
-                                />
-                              </div>
-                            </div>
-                          </div>
+                       <Calender from={from}setFrom={setFrom}to={to}setTo={setTo}/>
                         </div>
                       </div>
                       <div className="clearfix" />
@@ -138,8 +111,9 @@ const Appointments = () => {
                                           ? null
                                           : userapp?.type == "chat"
                                           ? "/ChatScreen"
-                                          :   userapp?.type == "videocall"
-                                          ? null:null
+                                          : userapp?.type == "videocall"
+                                          ? null
+                                          : null
                                       }
                                     >
                                       <p className="accepted">

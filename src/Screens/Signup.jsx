@@ -8,10 +8,14 @@ import Toasty from "../utils/toast";
 
 import ImageSelector from "../components/ImageSelector";
 import "react-toastify/dist/ReactToastify.css";
+import { validateEmail } from "../utils/ValidateEmail";
 
-const Signup = ({history}) => {
+const Signup = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const [showicon, setshowicon] = useState(true);
+  const [showicon2, setshowicon2] = useState(true);
   useEffect(() => {
     if (userInfo) {
       history.replace("/Profile");
@@ -28,16 +32,24 @@ const Signup = ({history}) => {
   const dispatch = useDispatch();
 
   const registerUserHandler = async () => {
-    const formData = new FormData();
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
+      const formData = new FormData();
 
-    formData.append("user_image", image);
-    formData.append("username", username);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("type", type);
-    formData.append("confirmpassword", confirmpassword);
+      formData.append("user_image", image);
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("type", type);
+      formData.append("confirmpassword", confirmpassword);
 
-    await dispatch(userSignUpAction(formData,history));  };
+      await dispatch(userSignUpAction(formData, history));
+    } else {
+      Toasty("error", `Please enter a valid email`);
+    }
+  };
   return (
     <section className="admin-login ad-log">
       <div className="container">
@@ -117,14 +129,14 @@ const Signup = ({history}) => {
                     }}
                   />
                 </div>
-               
+
                 <div className="form-group position-relative mb-1">
                   <label htmlFor>
                     Password<span className="red-star">*</span>
                   </label>
                   <div className="position-relative">
                     <input
-                      type="password"
+                      type={showicon ? "password" : "text"}
                       className="form-control w-90 enter-input"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -135,7 +147,12 @@ const Signup = ({history}) => {
                       }}
                     />
                     <i
-                      className="fa enter-icon right-icon fa-eye-slash right-icon-90"
+                      onClick={() => setshowicon(!showicon)}
+                      className={
+                        showicon
+                          ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                          : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                      }
                       aria-hidden="true"
                     />
                   </div>
@@ -146,7 +163,7 @@ const Signup = ({history}) => {
                   </label>
                   <div className="position-relative">
                     <input
-                      type="password"
+                      type={showicon2 ? "password" : "text"}
                       className="form-control w-90 enter-input-2"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -157,14 +174,19 @@ const Signup = ({history}) => {
                       }}
                     />
                     <i
-                      className="fa enter-icon-2 right-icon fa-eye-slash right-icon-90"
+                      onClick={() => setshowicon2(!showicon2)}
+                      className={
+                        showicon2
+                          ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                          : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                      }
                       aria-hidden="true"
                     />
                   </div>
                 </div>
                 <div className="text-md-left text-center pb-md-0 pb-2">
                   <button
-                    onClick={()=>
+                    onClick={() =>
                       username?.length > 0 &&
                       email?.length > 0 &&
                       confirmpassword?.length > 0 &&
@@ -202,13 +224,12 @@ const Signup = ({history}) => {
                     Want to register as a Enterprise? Click Here
                   </Link>
                   <Link
-                  onClick={() => {
-                    window.open(
-                      "https://dev74.onlinetestingserver.com/LMS/home"
-                    );
-                  }}
+                    onClick={() => {
+                      window.open(
+                        "https://dev74.onlinetestingserver.com/LMS/home"
+                      );
+                    }}
                     to="#"
-                   
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
                   >
                     <img

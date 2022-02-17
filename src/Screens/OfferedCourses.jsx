@@ -109,6 +109,8 @@ const OfferedCourses = ({ history }) => {
                           <select
                             name
                             id
+                            size={2}
+
                             className="genaral-select"
                             onChange={(e) => {
                               categoryFilterHandler(e.target.value);
@@ -128,7 +130,10 @@ const OfferedCourses = ({ history }) => {
                           <div className="dash-card-inner ">
                             <div className="row">
                               <div className="col-lg-6 mb-3 mt-lg-5 mt-2">
-                                <h2 className="course-heading">Category B</h2>
+                                <h2 className="course-heading">
+                                  {" "}
+                                  {group?.category?.name}
+                                </h2>
                               </div>
                             </div>
                             <div className="row">

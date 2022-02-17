@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import StripeCheckout from "react-stripe-checkout";
 import { SunspotLoader } from "react-awesome-loaders";
 
-const RequestNewAppointment = ({history}) => {
+const RequestNewAppointment = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -177,7 +177,7 @@ const RequestNewAppointment = ({history}) => {
         showConfirmButton: false,
         timer: 1500
       });
-      history.push('/Appointments')
+      history.push("/Appointments");
     }
   }
 
@@ -238,9 +238,7 @@ const RequestNewAppointment = ({history}) => {
                                     <option value>Select</option>
                                     {allofcourses?.length > 0 &&
                                       allofcourses?.map((cours) => (
-                                        <option
-                                          value={cours?._id}
-                                        >
+                                        <option value={cours?._id}>
                                           {cours?.coursetitle}
                                         </option>
                                       ))}
@@ -255,11 +253,15 @@ const RequestNewAppointment = ({history}) => {
                                   <DatePicker
                                     selected={requestdate}
                                     minDate={new Date()}
-
+                                    placeholderText='Select a date'
                                     onChange={(requestdate) =>
                                       setrequestdate(requestdate)
                                     }
                                     className="sort-date customdate form-control"
+                                  />
+                                  <i
+                                    className="fa enter-icon right-icon fas fa-calendar-alt"
+                                    aria-hidden="true"
                                   />
                                   <p className="note-booking">
                                     <span>Note:</span>{" "}
@@ -392,35 +394,37 @@ const RequestNewAppointment = ({history}) => {
                               </div>
                               <div className="row">
                                 <div className="col-12 text-center mt-3">
-                                  {alreadyBooked&&
-                                  <button
-                                    type="button"
-                                    className="green-btn"
-                                    onClick={() => {
-                                      courseid?.length > 0 &&
-                                      requestdate !== null &&
-                                      requesttime?.length > 0 &&
-                                      type?.length > 0 &&
-                                      description?.length > 0
-                                        ? onSubmitHandler()
-                                        : Toasty(
-                                            "error",
-                                            `Please fill out all the required fields`
-                                          );
-                                    }}
-                                  >
-                                    Next
-                                  </button>}
+                                  {alreadyBooked && (
+                                    <button
+                                      type="button"
+                                      className="green-btn"
+                                      onClick={() => {
+                                        courseid?.length > 0 &&
+                                        requestdate !== null &&
+                                        requesttime?.length > 0 &&
+                                        type?.length > 0 &&
+                                        description?.length > 0
+                                          ? onSubmitHandler()
+                                          : Toasty(
+                                              "error",
+                                              `Please fill out all the required fields`
+                                            );
+                                      }}
+                                    >
+                                      Next
+                                    </button>
+                                  )}
                                 </div>
                               </div>
                             </form>
-                            {!alreadyBooked&&
+                            {!alreadyBooked && (
                               <StripeCheckout
                                 stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
                                 token={handleToken}
                                 amount={cost * 100}
                                 email={userInfo?.email}
-                              ></StripeCheckout>}
+                              ></StripeCheckout>
+                            )}
                           </div>
                         </div>
                       </div>

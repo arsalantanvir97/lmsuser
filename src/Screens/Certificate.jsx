@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import Pagination from '../components/Padgination';
+import Calender from '../components/Calender';
 
 const Certificate = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -98,38 +99,11 @@ const Certificate = () => {
                   <div className="card user-management">
                     <div className="card-content collapse show">
                       <div className="card-body table-responsive card-dashboard">
-                        <h1 className="main-heading">Certificates</h1>
-                        <p className="note-booking mt-2">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium, perspiciatis ratione a totam in soluta nostrum nihil repudiandae assumenda ab aut? Veniam dolorum impedit animi culpa. Asperiores aperiam minima quia?</p>
+                        <h1 className="main-heading mb-1">Certificates</h1>
                         <div className="clearfix" />
-                        <div className="row mt-1">
+                        <div className="row mb-1">
                           <div className="col-lg-6 col-12">
-                            <div className="d-flex align-items-center">
-                              <p className="l-grey source f-20 d-lg-inline-block">Sort By:</p>
-                               <div className="ml-2">
-                                <div
-                                  role="wrapper"
-                                  className="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"
-                                >
-                                  <DatePicker
-                                    selected={from}
-                                    onChange={(from) => setFrom(from)}
-                                    className="sort-date customdate form-control"
-                                  />
-                                </div>
-                              </div>
-                              <div className="ml-2">
-                                <div
-                                  role="wrapper"
-                                  className="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"
-                                >
-                                  <DatePicker
-                                    selected={to}
-                                    onChange={(to) => setTo(to)}
-                                    className="sort-date customdate form-control"
-                                  />
-                                </div>
-                              </div>
-                            </div>
+                          <Calender from={from}setFrom={setFrom}to={to}setTo={setTo}/>
                           </div>
                         </div>
                         <div className="clearfix" />
@@ -156,7 +130,7 @@ const Certificate = () => {
                                      
                                       <td>
                                         {moment
-                                          .utc(ent?.completionDate)
+                                          .utc(ent?.completiondate)
                                           .format("LL")}
                                       </td>
                                       <td>

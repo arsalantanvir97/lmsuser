@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import ImageSelector from "../components/ImageSelector";
 import { updateUserInfoAction } from "../actions/userActions";
+import Toasty from "../utils/toast";
 
 const EditProfile = () => {
   const [username, setusername] = useState("");
@@ -21,14 +22,18 @@ const EditProfile = () => {
   }, [userInfo]);
 
   const updateProfileData = async (e) => {
-    const formData = new FormData();
-console.log('image',image);
-    formData.append("user_image", image);
-    formData.append("username", username);
-    formData.append("email", userInfo?.email);
+    if (username?.length > 0) {
+      const formData = new FormData();
+      console.log("image", image);
+      formData.append("user_image", image);
+      formData.append("username", username);
+      formData.append("email", userInfo?.email);
 
-    await dispatch(updateUserInfoAction(formData));
-    setIsEdit(false);
+      await dispatch(updateUserInfoAction(formData));
+      setIsEdit(false);
+    } else {
+      Toasty("error", `Please fill out all the required fields!`);
+    }
   };
   return (
     <div className="app-content content">
@@ -59,40 +64,41 @@ console.log('image',image);
                               is_edit={is_edit}
                             />
                           </div>
-                          <Link to="/ChangePassword" className="chg-pwdd">
-                            Change Password
-                          </Link>
+                          <div className="mt-1">
+                            <Link to="/ChangePassword">Change Password</Link>
+                          </div>
+                          <div style={{ height: 15 }}></div>
                         </div>
                       </div>
                       <div className="row justify-content-center">
                         <div className="col-lg-4">
                           <div className="row">
                             <div className="col-lg-12 mb-2">
-                              <label className="all-label2 ml-2 mb-1">
+                              <label className="all-label2  mb-1">
                                 Full Name:
                               </label>
                               {is_edit ? (
                                 <input
                                   type="text"
-                                  defaultValue="Mark Carson"
                                   className="w-100 all-input"
+                                  id="exampleInputEmail1"
+                                  aria-describedby="emailHelp"
+                                  placeholder="Full Name"
                                   value={username}
                                   onChange={(e) => {
                                     setusername(e.target.value);
                                   }}
                                 />
                               ) : (
-                                <div className="col-lg-9">
-                                <p className="label-value2 profilee-lbll">{username}</p>
-                                </div>
+                                <p>{username}</p>
                               )}
                             </div>
                             <div className="col-lg-3">
-                              <label className="all-label2 ml-2">Email:</label>
+                              <label className="all-label2 ">Email:</label>
                             </div>
                             <div className="col-lg-9">
                               <p className="label-value2 profilee-lbll">
-                                {userInfo?.email}{" "}
+                                {userInfo?.email}
                               </p>
                             </div>
                           </div>

@@ -8,6 +8,7 @@ import moment from "moment";
 import StripeCheckout from "react-stripe-checkout";
 import Swal from "sweetalert2";
 import { SunspotLoader } from "react-awesome-loaders";
+import { handleChange } from "../utils/InputNumberValidation";
 
 const CoursePayment = (props) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -75,7 +76,7 @@ const CoursePayment = (props) => {
       response.data.receipt_email
     );
     const res = await axios.post(
-      `${baseURL}/registeredCourses/registerEmployee`,
+      `${baseURL}/registeredCourses/createregisteredCourses`,
       {
         userid: userInfo?._id,
         courseid: course?._id,
@@ -96,23 +97,24 @@ const CoursePayment = (props) => {
 
   return (
     <>
-    {loading&&
-      <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-30%, -60%)",
-          zIndex:1111111111111
-        }}
-      >
-        <SunspotLoader
-          gradientColors={["#000"]}
-          shadowColor={"#FFF"}
-          desktopSize={"50px"}
-          mobileSize={"35px"}
-        />
-      </div>}
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-30%, -60%)",
+            zIndex: 1111111111111
+          }}
+        >
+          <SunspotLoader
+            gradientColors={["#000"]}
+            shadowColor={"#FFF"}
+            desktopSize={"50px"}
+            mobileSize={"35px"}
+          />
+        </div>
+      )}
       <section className="admin-profile">
         <div className="app-content content">
           <div className="content-wrapper">
@@ -137,7 +139,7 @@ const CoursePayment = (props) => {
                                   <div className="col-lg-8 col-12">
                                     <>
                                       {/* progressbar */}
-                                      <ul id="progressbar" className="pl-0">
+                                      {/* <ul id="progressbar" className="pl-0">
                                         <li
                                           className={
                                             toggleform == 0 ? "active" : null
@@ -162,9 +164,9 @@ const CoursePayment = (props) => {
                                           <h3 className="medium">Confirm</h3>
                                           <i className="check" />
                                         </li>
-                                      </ul>
+                                      </ul> */}
                                       {/* fieldsets */}
-                                      {toggleform == 0 ? (
+                                      {/* {toggleform == 0 ? (
                                         <fieldset>
                                           <div className="row">
                                             <div className="col-md-6 col-sm-12">
@@ -199,9 +201,10 @@ const CoursePayment = (props) => {
                                                   value={phone}
                                                   className="site-input"
                                                   onChange={(e) => {
-                                                    setphone(e.target.value);
+                                                    handleChange(e, setphone);
                                                   }}
                                                   type="number"
+                                                  min={0}
                                                 />
                                               </div>
                                             </div>
@@ -305,145 +308,116 @@ const CoursePayment = (props) => {
                                               </div>
                                             </div>
                                           </div>
-                                        </fieldset>
-                                      ) : toggleform == 2 ? (
-                                        <div className="table-responsive right">
-                                          <table className="table shopping-cart-wrap cart m-0">
-                                            <tbody>
-                                              <tr>
-                                                <td className="step-td-hading">
-                                                  Course Details
-                                                </td>
-                                              </tr>
-                                              <tr>
-                                                <td>
-                                                  <div className="img-wrap">
-                                                    <img
-                                                      src={
-                                                        course?.images?.length >
-                                                        0
-                                                          ? `${imageURL}${course?.images?.[0]}`
-                                                          : ""
-                                                      }
-                                                      className="img-fluid step-form-img w-100"
-                                                      alt=""
-                                                    />
+                                        </fieldset> */}
+
+                                      <div className="table-responsive right">
+                                        <table className="table shopping-cart-wrap cart m-0">
+                                          <tbody>
+                                            <tr>
+                                              <td className="step-td-hading">
+                                                Course Details
+                                              </td>
+                                            </tr>
+                                            <tr>
+                                              <td>
+                                                <div className="img-wrap">
+                                                  <img
+                                                    src={
+                                                      course?.images?.length > 0
+                                                        ? `${imageURL}${course?.images?.[0]}`
+                                                        : ""
+                                                    }
+                                                    className="img-fluid step-form-img w-100"
+                                                    alt=""
+                                                  />
+                                                </div>
+                                              </td>
+                                              <td className="align-middle">
+                                                <div className="row">
+                                                  <div className="col-6 ">
+                                                    <p className="step-table-p">
+                                                      Course Code:
+                                                    </p>
+                                                    <p className="step-table-p">
+                                                      Cost
+                                                    </p>
+                                                    <p className="step-table-p">
+                                                      Start Date
+                                                    </p>
                                                   </div>
-                                                </td>
-                                                <td className="align-middle">
-                                                  <div className="row">
-                                                    <div className="col-6">
-                                                      <p className="step-table-p">
-                                                        Course Code:
-                                                      </p>
-                                                      <p className="step-table-p">
-                                                        Cost
-                                                      </p>
-                                                      <p className="step-table-p">
-                                                        Start Date
-                                                      </p>
-                                                    </div>
-                                                    <div className="col-6">
-                                                      <p className="step-table-p-value">
-                                                        {course?.coursecode}
-                                                      </p>
-                                                      <p className="step-table-p-value">
-                                                        ${amountinnum}
-                                                      </p>
-                                                      <p className="step-table-p-value">
-                                                        {moment
-                                                          .utc(new Date())
-                                                          .format("YYYY-MM-DD")}
-                                                      </p>
-                                                    </div>
+                                                  <div className="col-6">
+                                                    <p className="step-table-p-value ml-3">
+                                                      {course?.coursecode}
+                                                    </p>
+                                                    <p className="step-table-p-value ml-3">
+                                                      ${amountinnum}
+                                                    </p>
+                                                    <p className="step-table-p-value ml-3">
+                                                      {moment
+                                                        .utc(new Date())
+                                                        .format("YYYY-MM-DD")}
+                                                    </p>
                                                   </div>
-                                                </td>
-                                                <td className="align-middle">
-                                                  <div className="row">
-                                                    <div className="col-6">
-                                                      <p className="step-table-p">
-                                                        Course Title:
-                                                      </p>
-                                                      <p className="step-table-p">
-                                                        Duartion
-                                                      </p>
-                                                      <p className="step-table-p">
-                                                        Ending Date
-                                                      </p>
-                                                    </div>
-                                                    <div className="col-6">
-                                                      <p className="step-table-p-value">
-                                                        {course?.coursetitle}
-                                                      </p>
-                                                      <p className="step-table-p-value">
-                                                        {
+                                                </div>
+                                              </td>
+                                              <td className="align-middle">
+                                                <div className="row">
+                                                  <div className="col-6">
+                                                    <p className="step-table-p ml-5">
+                                                      Course Title:
+                                                    </p>
+                                                    <p className="step-table-p ml-5">
+                                                      Duartion
+                                                    </p>
+                                                    <p className="step-table-p ml-5">
+                                                      Ending Date
+                                                    </p>
+                                                  </div>
+                                                  <div className="col-6">
+                                                    <p className="step-table-p-value ml-5">
+                                                      {course?.coursetitle}
+                                                    </p>
+                                                    <p className="step-table-p-value ml-5">
+                                                      {
+                                                        props?.location?.state
+                                                          ?.amount?.month
+                                                      }{" "}
+                                                      Months
+                                                    </p>
+                                                    <p className="step-table-p-value ml-5">
+                                                      {moment(course?.createdAt)
+                                                        .add(
                                                           props?.location?.state
-                                                            ?.amount?.month
-                                                        }{" "}
-                                                        Months
-                                                      </p>
-                                                      <p className="step-table-p-value">
-                                                        {moment(
-                                                          course?.createdAt
+                                                            ?.amount?.month,
+                                                          "M"
                                                         )
-                                                          .add(
-                                                            props?.location
-                                                              ?.state?.amount
-                                                              ?.month,
-                                                            "M"
-                                                          )
-                                                          .format("YYYY-MM-DD")}
-                                                      </p>
-                                                    </div>
+                                                        .format("YYYY-MM-DD")}
+                                                    </p>
                                                   </div>
-                                                </td>
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        </div>
-                                      ) : null}
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+
                                       <div className="text-center mt-2">
-                                        {toggleform !== 0 && (
-                                          <button
-                                            type="button"
-                                            class="green-btn mr-1"
-                                            onClick={() =>
-                                              settoggleform(toggleform - 1)
-                                            }
-                                          >
-                                            Previous
-                                          </button>
-                                        )}
-                                        {toggleform == 2 ? null : (
-                                          <button
-                                            onClick={() => {
-                                              toggleform == 0 &&
-                                              email?.length > 0 &&
-                                              phone?.length > 0 &&
-                                              username?.length > 0
-                                                ? settoggleform(1)
-                                                : toggleform == 1 &&
-                                                  cardholdername?.length > 0 &&
-                                                  cvc?.length > 0 &&
-                                                  cardNumber?.length > 0 &&
-                                                  expiry?.length > 0
-                                                ? settoggleform(2)
-                                                : emptyfunc();
-                                            }}
-                                            type="button"
-                                            class="green-btn"
-                                          >
-                                            Continue
-                                          </button>
-                                        )}
-                                        {toggleform == 2 && (
-                                          <StripeCheckout
-                                            stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
-                                            token={handleToken}
-                                            amount={amountinnum * 100}
-                                            email={email}
-                                          ></StripeCheckout>
-                                        )}
+                                        <button
+                                          type="button"
+                                          class="green-btn mr-1"
+                                          onClick={() =>
+                                            settoggleform(toggleform - 1)
+                                          }
+                                        >
+                                          Previous
+                                        </button>
+
+                                        <StripeCheckout
+                                          stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
+                                          token={handleToken}
+                                          amount={amountinnum * 100}
+                                          email={email}
+                                        ></StripeCheckout>
                                       </div>
                                     </>
                                   </div>

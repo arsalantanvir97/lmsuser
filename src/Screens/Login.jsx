@@ -5,6 +5,8 @@ import { userLoginAction,userResetPasswordAction } from "../actions/userActions"
 import Swal from "sweetalert2";
 import api from "../utils/api";
 import Toasty from "../utils/toast";
+import { handleChange } from "../utils/InputNumberValidation";
+import { validateEmail } from "../utils/ValidateEmail";
 
 const Login = ({ history }) => {
   const dispatch = useDispatch();
@@ -14,6 +16,9 @@ const Login = ({ history }) => {
   const [code, setcode] = useState();
   const [new_password, setnew_password] = useState();
   const [forgotpasswordModal, setforgotpasswordModal] = useState(0);
+  const [showicon, setshowicon] = useState(true);
+  const [showicon2, setshowicon2] = useState(true);
+  const [showicon3, setshowicon3] = useState(true);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -24,11 +29,17 @@ const Login = ({ history }) => {
   }, [userInfo]);
 
   const loginHandler = async () => {
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
     console.log("submitHandler");
     await dispatch(userLoginAction(email, password, confirm_password, history));
     setemail("");
     setpassword("");
-    setconfirm_password("");
+    setconfirm_password("")} else {
+      Toasty("error", `Please enter a valid email`);
+    }
   };
 
   const forgotpasswordHandler = async (e) => {
@@ -67,7 +78,12 @@ const Login = ({ history }) => {
   };
 
   const resetPasswordHandler = (e) => {
+    
     e.preventDefault();
+    const emailvalidation = validateEmail(new_password);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
     console.log("resetPasswordHandler");
     dispatch(
       userResetPasswordAction(
@@ -86,7 +102,9 @@ const Login = ({ history }) => {
           setnew_password("");
         }
       )
-    );
+    )} else {
+      Toasty("error", `Please enter a valid email`);
+    }
   };;
   return (
     <section className="admin-login ad-log">
@@ -133,7 +151,7 @@ const Login = ({ history }) => {
                   </label>
                   <div className="position-relative">
                     <input
-                      type="password"
+                      type={showicon ? "password" : "text"}
                       className="form-control w-90 enter-input"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -144,7 +162,12 @@ const Login = ({ history }) => {
                       }}
                     />
                     <i
-                      className="fa enter-icon right-icon fa-eye-slash right-icon-90"
+                      onClick={() => setshowicon(!showicon)}
+                      className={
+                        showicon
+                          ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                          : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                      }
                       aria-hidden="true"
                     />
                   </div>
@@ -155,7 +178,7 @@ const Login = ({ history }) => {
                   </label>
                   <div className="position-relative">
                     <input
-                      type="password"
+                      type={showicon2 ? "password" : "text"}
                       className="form-control w-90 enter-input"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -166,7 +189,12 @@ const Login = ({ history }) => {
                       }}
                     />
                     <i
-                      className="fa enter-icon right-icon fa-eye-slash right-icon-90"
+                       onClick={() => setshowicon2(!showicon2)}
+                       className={
+                         showicon2
+                           ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                           : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                       }
                       aria-hidden="true"
                     />
                   </div>
@@ -279,10 +307,12 @@ const Login = ({ history }) => {
                     className="form-control w-100"
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
+                    min={0}
+
                     placeholder="Verification Code"
                     value={code}
                     onChange={(e) => {
-                      setcode(e.target.value);
+                      handleChange(e, setcode);
                     }}
                   />
                 ) : forgotpasswordModal == 2 ? (
@@ -291,7 +321,7 @@ const Login = ({ history }) => {
                       Password*
                     </label>{" "}
                     <input
-                      type="password"
+                      type={showicon3 ? "password" : "text"}
                       className="form-control w-100 enter-input"
                       id="exampleInputPassword1"
                       placeholder="Enter Password"

@@ -176,6 +176,8 @@ const ViewLecture = ({match,history}) => {
                               <h3 className="course-dtl">Lecture Details</h3>
                             </div>
                           </div>
+                          {lecturedetails?.length>0 ?
+                          <>
                           <div className="row mt-2">
                             <div className="col-lg-4">
                               <label htmlFor className="course-lbll mt-1">
@@ -229,7 +231,9 @@ const ViewLecture = ({match,history}) => {
                                   </video>
                                 )}
                             </div>
-                          </div>
+                          </div></>:  <div className="main-heading text-lg-center">
+                          No Lectures to Show
+                        </div>}
                           <div className="row">
                             {showbutton && (
                               <div className="col-lg-4 mt-2">

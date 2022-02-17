@@ -18,6 +18,7 @@ import EditProfile from "./Screens/EditProfile";
 import CourseDetails from "./Screens/CourseDetails";
 import EmployeeSignup from "./Screens/EmployeeSignup";
 import RegisteredCourseLecture from "./Screens/RegisteredCourseLecture";
+import RescheduleAppointment from "./Screens/RescheduleAppointment";
 
 import TakeQuiz from "./Screens/TakeQuiz";
 import ChatScreen from "./components/ChatScreen";
@@ -77,6 +78,11 @@ const App = () => {
         component={EmployeeSignup}
         exact
       />{" "}
+         <PrivateRoute
+        exact
+        path="/RescheduleAppointment/:id"
+        component={RescheduleAppointment}
+      />{" "}
       <PrivateRoute exact path="/Appointments" component={Appointments} />{" "}
       <PrivateRoute exact path="/Certificate" component={Certificate} />{" "}
       <PrivateRoute exact path="/ChangePassword" component={ChangePassword} />{" "}
@@ -89,6 +95,8 @@ const App = () => {
         component={PaymentLogDetails}
       />{" "}
       <PrivateRoute exact path="/PaymentLogs" component={PaymentLogs} />{" "}
+      <PrivateRoute exact path="/RescheduleAppointment" component={RescheduleAppointment} />{" "}
+
       <PrivateRoute
         exact
         path="/RegistrationCourses"

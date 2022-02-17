@@ -8,6 +8,7 @@ import Pagination from "../components/Padgination";
 import Swal from "sweetalert2";
 import QuizItem from "./QuizItem";
 import QuizPagination from "../components/QuizPagination";
+let timerr;
 let correctmarks = 0;
 let countdown;
 const TakeQuiz = ({ match, history }) => {
@@ -28,25 +29,28 @@ const TakeQuiz = ({ match, history }) => {
   useEffect(() => {
     getQuizHandler();
     console.log(match?.params?.id);
+    return () => {
+      window.clearInterval(timerr);
+    };
   }, [page, perPage, from, to, status, searchString]);
-  const updateCourseFailiure = async () => {
-    console.log("courseid");
-    try {
-      const res = await axios({
-        url: `${baseURL}/registeredCourses/updateRegisteredCourseFail/${match?.params?.id}`,
-        method: "GET",
-        params:{userid:userInfo?._id},
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
-    } catch (error) {
-      Toasty("error", `Something went wrong`);
-    }
-  };
-  function countDownHandler2() {
+  // const updateCourseFailiure = async () => {
+  //   console.log("courseid");
+  //   try {
+  //     const res = await axios({
+  //       url: `${baseURL}/registeredCourses/updateRegisteredCourseFail/${match?.params?.id}`,
+  //       method: "GET",
+  //       params: { userid: userInfo?._id },
+  //       headers: {
+  //         Authorization: `Bearer ${userInfo.token}`
+  //       }
+  //     });
+  //   } catch (error) {
+  //     Toasty("error", `Something went wrong`);
+  //   }
+  // };
+  const countDownHandler2 = async () => {
     setenable(true);
-    Swal.fire({
+    await Swal.fire({
       icon: "info",
       title: "",
       text: "You ran out of time, Retake the Quiz",
@@ -54,9 +58,9 @@ const TakeQuiz = ({ match, history }) => {
       timer: 1500
     });
     window.location.reload();
-  }
+  };
   function countDownHandler() {
-    setTimeout(countDownHandler2, countdown);
+    timerr = setInterval(countDownHandler2, countdown);
   }
   const getQuizHandler = async () => {
     console.log("getQuizHandler");
@@ -88,7 +92,7 @@ const TakeQuiz = ({ match, history }) => {
     }
   };
   const handlechangeinput = (index, event) => {
-    console.log("event.target.value",index, event.target.value);
+    console.log("event.target.value", index, event.target.value);
     const values = [...inputfields];
     values[index] = event.target.value;
 
@@ -104,7 +108,7 @@ const TakeQuiz = ({ match, history }) => {
       const res = await axios({
         url: `${baseURL}/registeredCourses/updateRegisteredCourse/${match?.params?.id}`,
         method: "GET",
-        params:{userid:userInfo?._id},
+        params: { userid: userInfo?._id },
 
         headers: {
           Authorization: `Bearer ${userInfo.token}`
@@ -160,7 +164,7 @@ const TakeQuiz = ({ match, history }) => {
         showConfirmButton: false,
         timer: 1500
       });
-      await updateCourseFailiure();
+      // await updateCourseFailiure();
     }
     setInputfields([]);
   };
@@ -235,8 +239,7 @@ const TakeQuiz = ({ match, history }) => {
                                                     onChange={(event) =>
                                                       handlechangeinput(
                                                         index,
-                                                        event,
-                                                        
+                                                        event
                                                       )
                                                     }
                                                   >
@@ -245,24 +248,16 @@ const TakeQuiz = ({ match, history }) => {
                                                     </option>
                                                     {/* <option value>All</option> */}
 
-                                                    <option
-                                                     value={1}
-                                                    >
+                                                    <option value={1}>
                                                       {quizzz?.quizoption1}
                                                     </option>
-                                                    <option
-                                                      value={2}
-                                                    >
+                                                    <option value={2}>
                                                       {quizzz?.quizoption2}
                                                     </option>
-                                                    <option
-                                                     value={3}
-                                                    >
+                                                    <option value={3}>
                                                       {quizzz?.quizoption3}
                                                     </option>
-                                                    <option
-                                                      value={4}
-                                                    >
+                                                    <option value={4}>
                                                       {quizzz?.quizoption4}
                                                     </option>
                                                   </select>

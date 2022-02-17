@@ -11,6 +11,7 @@ import { LoaderName } from "react-awesome-loaders";
 import StripeCheckout from "react-stripe-checkout";
 import { SunspotLoader } from "react-awesome-loaders";
 import { closeModals } from "../utils/closeModals";
+import Calender from "../components/Calender";
 
 const RegistrationCourses = () => {
   let history = useHistory();
@@ -26,6 +27,8 @@ const RegistrationCourses = () => {
   const [to, setTo] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setloading] = useState(false);
+  
+
 
   useEffect(() => {
     handleGetQuizzes();
@@ -139,39 +142,12 @@ const RegistrationCourses = () => {
                   <div className="card user-management">
                     <div className="card-content collapse show">
                       <div className="card-body table-responsive card-dashboard">
-                        <h1 className="main-heading">Registered Courses</h1>
+                        <h1 className="main-heading mb-1">Registered Courses</h1>
                         <div className="clearfix" />
-                        <div className="row mt-1">
+                        <div className="row mb-1">
                           <div className="col-lg-6 col-12">
-                            <div className="d-flex align-items-center">
-                              <p className="l-grey source f-20 d-lg-inline-block">
-                                Sort By:
-                              </p>
-                              <div className="ml-2">
-                                <div
-                                  role="wrapper"
-                                  className="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"
-                                >
-                                  <DatePicker
-                                    selected={from}
-                                    onChange={(from) => setFrom(from)}
-                                    className="sort-date customdate form-control"
-                                  />
-                                </div>
-                              </div>
-                              <div className="ml-2">
-                                <div
-                                  role="wrapper"
-                                  className="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"
-                                >
-                                  <DatePicker
-                                    selected={to}
-                                    onChange={(to) => setTo(to)}
-                                    className="sort-date customdate form-control"
-                                  />
-                                </div>
-                              </div>
-                            </div>
+                          <Calender from={from}setFrom={setFrom}to={to}setTo={setTo}/>
+
                           </div>
                         </div>
                         <div className="clearfix" />
