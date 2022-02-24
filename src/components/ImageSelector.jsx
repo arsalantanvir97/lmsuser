@@ -7,7 +7,7 @@ export default function ImageSelector({
   image,
   is_edit,
   className,
-  custom_style,
+  custom_style
 }) {
   const [defaultImage, setDefaultImage] = useState();
   const imageRef = useRef();
@@ -46,7 +46,7 @@ export default function ImageSelector({
                   width: 128,
                   height: 128,
                   borderRadius: 60,
-                  cursor: "pointer",
+                  cursor:is_edit ? "pointer" :'cursor'
                 }
           }
         />
@@ -61,7 +61,7 @@ export default function ImageSelector({
             padding: 10,
             textAlign: "center",
             justifyContent: "center",
-            cursor: "pointer",
+            cursor: is_edit ? "pointer" :'cursor'
           }}
           onClick={is_edit ? showOpenFileDialog : null}
         >
@@ -70,7 +70,7 @@ export default function ImageSelector({
             style={{
               fontSize: 50,
               color: "#999999",
-              marginTop: 28,
+              marginTop: 28
             }}
           />
           <p className="mt-1">Upload Image</p>

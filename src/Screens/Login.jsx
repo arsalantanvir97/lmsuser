@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { userLoginAction,userResetPasswordAction } from "../actions/userActions";
+import {
+  userLoginAction,
+  userResetPasswordAction
+} from "../actions/userActions";
 import Swal from "sweetalert2";
 import api from "../utils/api";
 import Toasty from "../utils/toast";
 import { handleChange } from "../utils/InputNumberValidation";
 import { validateEmail } from "../utils/ValidateEmail";
+import InputNumber from "../components/InputNumber";
 
 const Login = ({ history }) => {
   const dispatch = useDispatch();
@@ -19,6 +23,7 @@ const Login = ({ history }) => {
   const [showicon, setshowicon] = useState(true);
   const [showicon2, setshowicon2] = useState(true);
   const [showicon3, setshowicon3] = useState(true);
+  const [showicon4, setshowicon4] = useState(true);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -33,24 +38,37 @@ const Login = ({ history }) => {
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
-    console.log("submitHandler");
-    await dispatch(userLoginAction(email, password, confirm_password, history));
-    setemail("");
-    setpassword("");
-    setconfirm_password("")} else {
+      console.log("submitHandler");
+      await dispatch(
+        userLoginAction(email, password, confirm_password, history)
+      );
+      setemail("");
+      setpassword("");
+      setconfirm_password("");
+    } else {
       Toasty("error", `Please enter a valid email`);
     }
   };
 
   const forgotpasswordHandler = async (e) => {
     e.preventDefault();
+    const emailvalidation = validateEmail(email);
+    console.log("emmmm", emailvalidation);
+    console.log("addEmployeeHandler");
+    if (emailvalidation == true) {
     const body = { email };
     console.log("TEST");
     try {
       const res = await api.post("/user/userRecoverPassword", body);
       console.log("res", res);
       if (res?.status == 201) {
-        Toasty("success", `🦄 Verification Code Sent To Your Email!`);
+        Swal.fire({
+          icon: "success",
+          title: "SUCCESS",
+          text: "Verification Code Sent to your mail",
+          showConfirmButton: false,
+          timer: 1500
+        });
         setforgotpasswordModal(1);
       }
     } catch (error) {
@@ -59,6 +77,8 @@ const Login = ({ history }) => {
       console.log("IN HERE");
       console.log(error?.response?.data);
       Toasty("error", `🦄 Invalid Email!`);
+    }}else {
+      Toasty("error", `Please enter a valid email`);
     }
   };
 
@@ -70,6 +90,7 @@ const Login = ({ history }) => {
       console.log("TEST");
       const res = await api.post("/user/userverifyRecoverCode", body);
       console.log("res", res);
+    
       setforgotpasswordModal(2);
     } catch (error) {
       console.log("error", error?.response);
@@ -78,34 +99,28 @@ const Login = ({ history }) => {
   };
 
   const resetPasswordHandler = (e) => {
-    
     e.preventDefault();
-    const emailvalidation = validateEmail(new_password);
-    console.log("emmmm", emailvalidation);
-    console.log("addEmployeeHandler");
-    if (emailvalidation == true) {
-    console.log("resetPasswordHandler");
-    dispatch(
-      userResetPasswordAction(
-        new_password,
-        confirm_password,
-        code,
-        email,
-        (res) => {
-          console.log("res", res);
-          setforgotpasswordModal(3);
-
-        },
-        (err) => {
-          console.log("err of SIGNIN -->", err);
-          setconfirm_password("");
-          setnew_password("");
-        }
-      )
-    )} else {
-      Toasty("error", `Please enter a valid email`);
-    }
-  };;
+   
+      console.log("resetPasswordHandler");
+      dispatch(
+        userResetPasswordAction(
+          new_password,
+          confirm_password,
+          code,
+          email,
+          (res) => {
+            console.log("res", res);
+            setforgotpasswordModal(3);
+          },
+          (err) => {
+            console.log("err of SIGNIN -->", err);
+            setconfirm_password("");
+            setnew_password("");
+          }
+        )
+      );
+    
+  };
   return (
     <section className="admin-login ad-log">
       <div className="container">
@@ -189,12 +204,12 @@ const Login = ({ history }) => {
                       }}
                     />
                     <i
-                       onClick={() => setshowicon2(!showicon2)}
-                       className={
-                         showicon2
-                           ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
-                           : "fa enter-icon-3 right-icon fa-eye right-icon-90"
-                       }
+                      onClick={() => setshowicon2(!showicon2)}
+                      className={
+                        showicon2
+                          ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                          : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                      }
                       aria-hidden="true"
                     />
                   </div>
@@ -229,11 +244,11 @@ const Login = ({ history }) => {
                     Are You a new user? Register
                   </Link>
                   <Link
-                  onClick={() => {
-                    window.open(
-                      "https://dev74.onlinetestingserver.com/LMS/home"
-                    );
-                  }}
+                    onClick={() => {
+                      window.open(
+                        "https://dev74.onlinetestingserver.com/LMS/home"
+                      );
+                    }}
                     to="#"
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
                   >
@@ -302,34 +317,39 @@ const Login = ({ history }) => {
                     }}
                   />
                 ) : forgotpasswordModal == 1 ? (
-                  <input
-                    type="number"
-                    className="form-control w-100"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    min={0}
-
-                    placeholder="Verification Code"
+                  <InputNumber
                     value={code}
-                    onChange={(e) => {
-                      handleChange(e, setcode);
-                    }}
+                    onChange={setcode}
+                    max={9}
+                    className="form-control w-100"
                   />
                 ) : forgotpasswordModal == 2 ? (
                   <>
                     <label htmlFor className="all-label">
                       Password*
                     </label>{" "}
-                    <input
-                      type={showicon3 ? "password" : "text"}
-                      className="form-control w-100 enter-input"
-                      id="exampleInputPassword1"
-                      placeholder="Enter Password"
-                      value={new_password}
-                      onChange={(e) => {
-                        setnew_password(e.target.value);
-                      }}
-                    />
+                    <div className="position-relative">
+                      <input
+                        type={showicon3 ? "password" : "text"}
+                        className="form-control w-90 enter-input-3"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        placeholder="Enter Password"
+                        value={new_password}
+                        onChange={(e) => {
+                          setnew_password(e.target.value);
+                        }}
+                      />
+                      <i
+                        onClick={() => setshowicon3(!showicon3)}
+                        className={
+                          showicon3
+                            ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                            : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                        }
+                        aria-hidden="true"
+                      />
+                    </div>
                     <div
                       style={{
                         height: 23
@@ -338,16 +358,28 @@ const Login = ({ history }) => {
                     <label htmlFor className="all-label">
                       Confirm Password*
                     </label>
-                    <input
-                      type="password"
-                      className="form-control w-100 enter-input-2"
-                      id="exampleInputPassword1"
-                      placeholder="Confirm Password"
-                      value={confirm_password}
-                      onChange={(e) => {
-                        setconfirm_password(e.target.value);
-                      }}
-                    />
+                    <div className="position-relative">
+                      <input
+                        type={showicon4 ? "password" : "text"}
+                        className="form-control w-90 enter-input-3"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        placeholder="Confirm Password"
+                        value={confirm_password}
+                        onChange={(e) => {
+                          setconfirm_password(e.target.value);
+                        }}
+                      />
+                      <i
+                        onClick={() => setshowicon4(!showicon4)}
+                        className={
+                          showicon4
+                            ? "fa enter-icon-3 right-icon fa-eye-slash right-icon-90"
+                            : "fa enter-icon-3 right-icon fa-eye right-icon-90"
+                        }
+                        aria-hidden="true"
+                      />
+                    </div>
                   </>
                 ) : null}
                 {forgotpasswordModal == 1 && (

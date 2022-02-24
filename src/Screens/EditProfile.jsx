@@ -47,11 +47,11 @@ const EditProfile = () => {
                   <div className="card-content collapse show">
                     <div className="card-body table-responsive card-dashboard">
                       {is_edit ? (
-                        <Link to="/Profile">
-                          <h1 className="main-heading">
-                            <i className="fas fa-chevron-left" /> Edit Profile
+                        <h1 className="main-heading">
+                            <Link to="/Profile">
+                            <i style={{color:'black'}} className="fas fa-chevron-left" />  </Link>Edit Profile
                           </h1>
-                        </Link>
+                       
                       ) : (
                         <h1 className="main-heading">Profile</h1>
                       )}

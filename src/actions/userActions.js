@@ -189,6 +189,13 @@ export const userResetPasswordAction =
         });
 
         localStorage.setItem("userInfo", JSON.stringify(res?.data));
+        await Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Password reset successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
         document.location.href = "/Profile";
       }
     } catch (error) {

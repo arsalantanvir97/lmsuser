@@ -49,12 +49,12 @@ const PaymentLogDetails = (props) => {
                             </Link>
                           </div>
                         </div>
-                        <Link to="/PaymentLogs">
+                      
                           <h1 className="main-heading">
-                            <i className="fas fa-chevron-left" /> Payment Log
+                          <Link to="/PaymentLogs"> <i style={{color:'black'}} className="fas fa-chevron-left" /> </Link> Payment Log
                             Details
                           </h1>
-                        </Link>
+                       
                         <div className="clearfix" />
                         <div className="dash-card-inner mt-4">
                           <div className="row">

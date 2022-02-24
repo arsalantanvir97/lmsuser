@@ -212,12 +212,12 @@ const RequestNewAppointment = ({ history }) => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                          <Link to="/Appointments">
                             <h1 className="main-heading">
-                              <i className="fas fa-chevron-left" /> Request New
+                          <Link to="/Appointments">
+                              <i style={{color:'black'}}  className="fas fa-chevron-left" />  </Link> Request New
                               Appointment
                             </h1>
-                          </Link>
+                        
                           <div className="clearfix" />
                           <div className="dash-card-inner mt-4">
                             <form>

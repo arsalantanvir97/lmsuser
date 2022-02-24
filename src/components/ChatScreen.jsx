@@ -51,11 +51,11 @@ function ChatScreen() {
           <div style={{ marginTop: 150 }}>
             {/* {props?.match?.params?.id && ( */}
 
-            <a onClick={() => history.goBack()}>
               <h5 className="fc-dgray" style={{ marginBottom: 30 }}>
-                <i className="fas fa-chevron-left fc-dred" /> Inbox
+            <a onClick={() => history.goBack()}>
+                <i className="fas fa-chevron-left fc-dred" /> </a> Inbox
               </h5>
-            </a>
+           
 
             {/* )} */}
 

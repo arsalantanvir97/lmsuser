@@ -58,12 +58,12 @@ const CourseDetails = (props) => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                          <Link to="/OfferedCourses">
                             <h1 className="main-heading">
-                              <i className="fas fa-chevron-left mr-1" />
+                          <Link to="/OfferedCourses">
+                              <i style={{color:'black'}} className="fas fa-chevron-left mr-1" /> </Link>
                               Course Details
                             </h1>
-                          </Link>
+                         
                           <div className="clearfix" />
                           <div className="dash-card-inner mt-4">
                             <p className="details-p">

@@ -34,3 +34,8 @@ body {
 html body.fixed-navbar{
   padding-top: 4rem;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

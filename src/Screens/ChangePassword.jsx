@@ -46,11 +46,11 @@ const ChangePassword = ({ history }) => {
                 <div className="card user-management">
                   <div className="card-content collapse show">
                     <div className="card-body table-responsive card-dashboard">
-                      <Link to="/Profile">
+                      
                         <h1 className="main-heading">
-                          <i className="fas fa-chevron-left" /> Change Password
+                        <Link to="/Profile"> <i style={{color:'black'}} className="fas fa-chevron-left" />    </Link>Change Password
                         </h1>
-                      </Link>
+                   
                       <div className="row change-pwdd">
                         <div className="col-lg-6 mt-3 ">
                           <div className="form-group position-relative mb-1">

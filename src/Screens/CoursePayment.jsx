@@ -126,11 +126,11 @@ const CoursePayment = (props) => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                          <Link to="/PaymentLogs">
-                            <h1 className="main-heading">
-                              <i className="fas fa-chevron-left" /> Payments
+                          
+                            <h1 className="main-heading"><Link to="/PaymentLogs">
+                              <i style={{color:'black'}} className="fas fa-chevron-left" />  </Link> Payments
                             </h1>
-                          </Link>
+                        
                           <div className="clearfix" />
                           <div className="dash-card-inner mt-4">
                             <section className>
