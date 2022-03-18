@@ -9,6 +9,8 @@ const EditProfile = () => {
   const [username, setusername] = useState("");
   const [image, setimage] = useState("");
   const [is_edit, setIsEdit] = useState(false);
+  const [loading, setloading] = useState(false);
+
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -23,6 +25,7 @@ const EditProfile = () => {
 
   const updateProfileData = async (e) => {
     if (username?.length > 0) {
+      setloading(true);
       const formData = new FormData();
       console.log("image", image);
       formData.append("user_image", image);
@@ -30,10 +33,15 @@ const EditProfile = () => {
       formData.append("email", userInfo?.email);
 
       await dispatch(updateUserInfoAction(formData));
+      setloading(false);
+
       setIsEdit(false);
     } else {
+      setloading(false);
+
       Toasty("error", `Please fill out all the required fields!`);
     }
+    setloading(false);
   };
   return (
     <div className="app-content content">
@@ -48,10 +56,14 @@ const EditProfile = () => {
                     <div className="card-body table-responsive card-dashboard">
                       {is_edit ? (
                         <h1 className="main-heading">
-                            <Link to="/Profile">
-                            <i style={{color:'black'}} className="fas fa-chevron-left" />  </Link>Edit Profile
-                          </h1>
-                       
+                          <Link to="/Profile">
+                            <i
+                              style={{ color: "black" }}
+                              className="fas fa-chevron-left"
+                            />{" "}
+                          </Link>
+                          Edit Profile
+                        </h1>
                       ) : (
                         <h1 className="main-heading">Profile</h1>
                       )}
@@ -106,19 +118,23 @@ const EditProfile = () => {
                       </div>
                       <div className="row my-lg-5 my-3">
                         <div className="col-12 text-center">
-                          <Link
-                            to="#"
-                            className="green-btn"
-                            onClick={() => {
-                              if (!is_edit) {
-                                setIsEdit(true);
-                              } else {
-                                updateProfileData();
-                              }
-                            }}
-                          >
-                            {is_edit ? "Update" : "Edit"}{" "}
-                          </Link>
+                          {!loading ? (
+                            <Link
+                              to="#"
+                              className="green-btn"
+                              onClick={() => {
+                                if (!is_edit) {
+                                  setIsEdit(true);
+                                } else {
+                                  updateProfileData();
+                                }
+                              }}
+                            >
+                              {is_edit ? "Update" : "Edit"}{" "}
+                            </Link>
+                          ) : (
+                            <i className="fas fa-spinner fa-pulse"></i>
+                          )}
                         </div>
                       </div>
                       <div className="clearfix" />

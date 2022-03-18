@@ -10,6 +10,8 @@ const ChangePassword = ({ history }) => {
   const [confirm_password, setconfirm_password] = useState("");
   const [showicon, setshowicon] = useState(true);
   const [showicon2, setshowicon2] = useState(true);
+  const [loading, setloading] = useState(false);
+
   const [showicon3, setshowicon3] = useState(true);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -22,15 +24,23 @@ const ChangePassword = ({ history }) => {
       newpassword,
       confirm_password
     );
-    await dispatch(
-      userverfyadnresetpasword(
-        existingpassword,
-        newpassword,
-        confirm_password,
-        userInfo?.email,
-        history
-      )
-    );
+    try {
+      setloading(true);
+      await dispatch(
+        userverfyadnresetpasword(
+          existingpassword,
+          newpassword,
+          confirm_password,
+          userInfo?.email,
+          history
+        )
+      );
+      setloading(false);
+    } catch (error) {
+      setloading(false);
+    }
+    setloading(false);
+
     setexistingpassword("");
     setnewpassword("");
     setconfirm_password("");
@@ -46,11 +56,17 @@ const ChangePassword = ({ history }) => {
                 <div className="card user-management">
                   <div className="card-content collapse show">
                     <div className="card-body table-responsive card-dashboard">
-                      
-                        <h1 className="main-heading">
-                        <Link to="/Profile"> <i style={{color:'black'}} className="fas fa-chevron-left" />    </Link>Change Password
-                        </h1>
-                   
+                      <h1 className="main-heading">
+                        <Link to="/Profile">
+                          {" "}
+                          <i
+                            style={{ color: "black" }}
+                            className="fas fa-chevron-left"
+                          />{" "}
+                        </Link>
+                        Change Password
+                      </h1>
+
                       <div className="row change-pwdd">
                         <div className="col-lg-6 mt-3 ">
                           <div className="form-group position-relative mb-1">
@@ -142,22 +158,26 @@ const ChangePassword = ({ history }) => {
                       </div>
                       <div className="row my-lg-5 my-3">
                         <div className="col-12 text-center">
-                          <Link
-                            to="#"
-                            onClick={() =>
-                              existingpassword?.length > 0 &&
-                              confirm_password?.length > 0 &&
-                              newpassword?.length > 0
-                                ? submitHandler()
-                                : Toasty(
-                                    "error",
-                                    `Please fill out all the required fields`
-                                  )
-                            }
-                            className="green-btn"
-                          >
-                            Update
-                          </Link>
+                          {!loading ? (
+                            <Link
+                              to="#"
+                              onClick={() =>
+                                existingpassword?.length > 0 &&
+                                confirm_password?.length > 0 &&
+                                newpassword?.length > 0
+                                  ? submitHandler()
+                                  : Toasty(
+                                      "error",
+                                      `Please fill out all the required fields`
+                                    )
+                              }
+                              className="green-btn"
+                            >
+                              Update
+                            </Link>
+                          ) : (
+                            <i className="fas fa-spinner fa-pulse"></i>
+                          )}
                         </div>
                       </div>
                       <div className="clearfix" />

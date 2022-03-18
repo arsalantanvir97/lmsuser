@@ -4,17 +4,18 @@ import { Link } from "react-router-dom";
 import { baseURL } from "../utils/api";
 import { useSelector, useDispatch } from "react-redux";
 import Toasty from "../utils/toast";
-import templateHTML from '../utils/templateHTML'
+import templateHTML from "../utils/templateHTML";
 import Swal from "sweetalert2";
-let courseid=''
+let courseid = "";
 const Lectures = () => {
   const [registeredCourses, setregisteredCourses] = useState();
   const [coursedetails, setcoursedetails] = useState();
+  const [loading, setloading] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   useEffect(() => {
-    courseid=''
+    courseid = "";
     getttingReisteredCourses();
   }, []);
 
@@ -42,7 +43,7 @@ const Lectures = () => {
     try {
       const res = await axios({
         url: `${baseURL}/registeredCourses/registeredcoursesDetails/${courseid}`,
-        params:{userid:userInfo?._id},
+        params: { userid: userInfo?._id },
         method: "GET",
         headers: {
           Authorization: `Bearer ${userInfo.token}`
@@ -54,7 +55,7 @@ const Lectures = () => {
       Toasty("error", `Something went wrong`);
     }
   };
-   const generateCertificateHandler = async (reg) => {
+  const generateCertificateHandler = async (reg) => {
     console.log("generateCertificateHandler");
     try {
       if (reg?.certificategenerated == true) {
@@ -66,6 +67,7 @@ const Lectures = () => {
           timer: 1500
         });
       } else {
+        setloading(true);
         const res = await axios.post(
           `${baseURL}/user/generateCertificate`,
           {
@@ -78,6 +80,8 @@ const Lectures = () => {
             }
           }
         );
+        setloading(false);
+
         console.log("res", res);
         Swal.fire({
           icon: "success",
@@ -87,10 +91,15 @@ const Lectures = () => {
           timer: 1500
         });
       }
+      setloading(false);
+
       window?.location?.reload();
     } catch (error) {
+      setloading(false);
+
       console.log("err", error);
     }
+    setloading(false);
   };
   return (
     <div className="app-content content">
@@ -119,7 +128,7 @@ const Lectures = () => {
                               courseDetails();
                             }}
                           >
-                            <option >select</option>
+                            <option>select</option>
                             {registeredCourses?.length > 0 &&
                               registeredCourses?.map((reg) => (
                                 <option value={reg?.courseid?._id}>
@@ -205,7 +214,7 @@ const Lectures = () => {
                                   </a>
                                 </li>
                                 <li className="nav-item" role="presentation">
-                                  <Link 
+                                  <Link
                                     className="nav-link"
                                     id="pills-lectures-tab"
                                     data-toggle="pill"
@@ -255,23 +264,29 @@ const Lectures = () => {
                                       </p>
                                     </div>
                                   </div>
-                                  {coursedetails?.certificate==true && coursedetails?.certificategenerated==false ?(
+                                  {coursedetails?.certificate == true &&
+                                  coursedetails?.certificategenerated ==
+                                    false ? (
                                     <div className="row">
                                       <div className="col-12 text-center mt-5">
-                                        <Link
-                                          to="#"
-                                          onClick={() => {
-                                            generateCertificateHandler(
-                                              coursedetails
-                                            );
-                                          }}
-                                          className="gren-btn d-inline-block"
-                                        >
-                                          Generate Certificate
-                                        </Link>
+                                        {!loading ? (
+                                          <Link
+                                            to="#"
+                                            onClick={() => {
+                                              generateCertificateHandler(
+                                                coursedetails
+                                              );
+                                            }}
+                                            className="gren-btn d-inline-block"
+                                          >
+                                            Generate Certificate
+                                          </Link>
+                                        ) : (
+                                          <i className="fas fa-spinner fa-pulse"></i>
+                                        )}
                                       </div>
                                     </div>
-                                  ):null}
+                                  ) : null}
                                 </div>
                               </div>
                             </div>

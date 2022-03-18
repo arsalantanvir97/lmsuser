@@ -12,7 +12,7 @@ const RescheduleAppointment = ({ match, history }) => {
   const { userInfo } = userLogin;
   const [appointmentDetails, setappointmentDetails] = useState();
   const [notificationDetails, setnotificationDetails] = useState();
-
+  const [loading, setloading] = useState(false);
   const [booking, setbooking] = useState();
   const [selectedtime, setselectedtime] = useState("");
 
@@ -66,6 +66,7 @@ const RescheduleAppointment = ({ match, history }) => {
           Authorization: `Bearer ${userInfo.token}`
         }
       };
+      setloading(true);
       console.log("beforehit");
       const res = await axios.post(
         `${baseURL}/appointment/updatetime`,
@@ -76,6 +77,8 @@ const RescheduleAppointment = ({ match, history }) => {
         },
         config
       );
+      setloading(true);
+
       console.log("res", res);
       if (res?.status == 201) {
         Swal.fire({
@@ -88,6 +91,8 @@ const RescheduleAppointment = ({ match, history }) => {
         history?.push("/Profile");
       }
     } catch (error) {
+      setloading(true);
+
       Swal.fire({
         icon: "error",
         title: "ERROR",
@@ -96,6 +101,7 @@ const RescheduleAppointment = ({ match, history }) => {
         timer: 1500
       });
     }
+    setloading(true);
   };
 
   return (
@@ -190,20 +196,24 @@ const RescheduleAppointment = ({ match, history }) => {
                               </div>
                               <div className="row">
                                 <div className="col-12 text-center mt-3">
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      selectedtime?.length > 0
-                                        ? rescheduleTimeHandler()
-                                        : Toasty(
-                                            "error",
-                                            `Please fill out all the required fields!`
-                                          )
-                                    }
-                                    className="green-btn"
-                                  >
-                                    Submit
-                                  </button>
+                                  {!loading ? (
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        selectedtime?.length > 0
+                                          ? rescheduleTimeHandler()
+                                          : Toasty(
+                                              "error",
+                                              `Please fill out all the required fields!`
+                                            )
+                                      }
+                                      className="green-btn"
+                                    >
+                                      Submit
+                                    </button>
+                                  ) : (
+                                    <i className="fas fa-spinner fa-pulse"></i>
+                                  )}
                                 </div>
                               </div>
                             </form>

@@ -14,6 +14,8 @@ const EmployeeSignup = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [showicon, setshowicon] = useState(true);
+  const [loading, setloading] = useState(false);
+
   const [showicon2, setshowicon2] = useState(true);
   useEffect(() => {
     console.log("match", match);
@@ -39,28 +41,35 @@ const EmployeeSignup = ({ history, match }) => {
     console.log("emmmm", emailvalidation);
     console.log("addEmployeeHandler");
     if (emailvalidation == true) {
-      const formData = new FormData();
-      let enterpriseid = match?.params?.id;
-      let courseid = match?.params?.course;
-      console.log(
-        "enterpriseid courseid",
-        match?.params?.course,
-        match?.params?.id
-      );
-      formData.append("user_image", image);
-      formData.append("username", username);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("type", type);
-      formData.append("enterpriseid", enterpriseid);
-      formData.append("courseid", courseid);
+      try {
+        setloading(true);
+        const formData = new FormData();
+        let enterpriseid = match?.params?.id;
+        let courseid = match?.params?.course;
+        console.log(
+          "enterpriseid courseid",
+          match?.params?.course,
+          match?.params?.id
+        );
+        formData.append("user_image", image);
+        formData.append("username", username);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("type", type);
+        formData.append("enterpriseid", enterpriseid);
+        formData.append("courseid", courseid);
 
-      formData.append("confirmpassword", confirmpassword);
+        formData.append("confirmpassword", confirmpassword);
 
-      await dispatch(employeeSignUpAction(formData, history));
+        await dispatch(employeeSignUpAction(formData, history));
+        setloading(false);
+      } catch (error) {
+        setloading(false);
+      }
     } else {
       Toasty("error", `Please enter a valid email`);
     }
+    setloading(false);
   };
   return (
     <section className="admin-login ad-log">
@@ -214,27 +223,31 @@ const EmployeeSignup = ({ history, match }) => {
                   </div>
                 </div>
                 <div className="text-md-left text-center pb-md-0 pb-2">
-                  <button
-                    onClick={() =>
-                      username?.length > 0 &&
-                      email?.length > 0 &&
-                      confirmpassword?.length > 0 &&
-                      password?.length > 0 &&
-                      image?.name?.length > 0 &&
-                      type?.length > 0
-                        ? registerUserHandler()
-                        : Toasty(
-                            "error",
-                            `Please fill out all the required fields`
-                          )
-                    }
-                    type="button"
-                    className="green-btn w-90 mt-2"
-                    data-target="#sign-up-platform"
-                    data-toggle="modal"
-                  >
-                    Sign Up
-                  </button>
+                  {!loading ? (
+                    <button
+                      onClick={() =>
+                        username?.length > 0 &&
+                        email?.length > 0 &&
+                        confirmpassword?.length > 0 &&
+                        password?.length > 0 &&
+                        image?.name?.length > 0 &&
+                        type?.length > 0
+                          ? registerUserHandler()
+                          : Toasty(
+                              "error",
+                              `Please fill out all the required fields`
+                            )
+                      }
+                      type="button"
+                      className="green-btn w-90 mt-2"
+                      data-target="#sign-up-platform"
+                      data-toggle="modal"
+                    >
+                      Sign Up
+                    </button>
+                  ) : (
+                    <i className="fas fa-spinner fa-pulse"></i>
+                  )}
                   <Link
                     to="/"
                     className="register-link d-flex align-items-center justify-content-center mt-3"
