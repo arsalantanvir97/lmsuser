@@ -91,8 +91,8 @@ const RequestNewAppointment = ({ history }) => {
     );
   };
   useEffect(() => {
-    console.log("requestdate", requestdate);
-  }, [requestdate]);
+    console.log("requesttime", requesttime);
+  }, [requesttime]);
 
   const onSubmitHandler = async () => {
     const res = await axios.post(
@@ -292,22 +292,15 @@ const RequestNewAppointment = ({ history }) => {
                                     }
                                   >
                                     <option>select</option>
-                                    <option value={"9-10 AM"}>9-10 AM</option>
-                                    <option value={"10-11 AM"}>10-11 AM</option>
-                                    <option value={"11-12 AM"}>11-12 AM</option>
-                                    <option value={"12-1 PM"}>12-1 PM</option>
-                                    <option value={"1-2 PM"}>1-2 PM</option>
-                                    <option value={"2-3 PM"}>
-                                      2-3 PM
-                                    </option>{" "}
-                                    <option value={"3-4 PM"}>3-4 PM</option>
-                                    <option value={"4-5 PM"}>4-5 PM</option>
-                                    <option value={"5-6 PM"}>5-6 PM</option>
-                                    <option value={"6-7 PM"}>6-7 PM</option>
-                                    <option value={"7-8 PM"}>7-8 PM</option>
-                                    <option value={"8-9 PM"}>8-9 PM</option>
-                                    <option value={"9-10 PM"}>9-10 PM</option>
-                                    <option value={"10-11 PM"}>10-11 PM</option>
+                                    {adminBooking?.time?.length > 0 &&
+                                      adminBooking?.time?.map((bok) => (
+                                        <option
+                                          value={bok?.time}
+                                        >
+                                          {bok?.time}
+                                        </option>
+                                      ))}
+                                    
                                   </select>
                                 </div>
                               </div>

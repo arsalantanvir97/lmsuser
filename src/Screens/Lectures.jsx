@@ -119,7 +119,7 @@ const Lectures = () => {
                           <select
                             name
                             id
-                            size={2}
+                            size={3}
                             // style={{minWidth:'100%'}}
                             className="form-control"
                             value={courseid}

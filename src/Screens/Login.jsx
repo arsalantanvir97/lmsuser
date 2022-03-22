@@ -281,7 +281,7 @@ const Login = ({ history }) => {
                   <Link
                     onClick={() => {
                       window.open(
-                        "https://dev74.onlinetestingserver.com/LMS/home"
+                        "https://wrightcoacademy.com/"
                       );
                     }}
                     to="#"

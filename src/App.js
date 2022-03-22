@@ -69,7 +69,7 @@ const App = () => {
   // };
 
   return (
-    <Router basename="/LMS/user">
+    <Router basename="/user">
       <Route path="/" component={Login} exact />{" "}
       <Route path="/Signup" component={Signup} exact />{" "}
 

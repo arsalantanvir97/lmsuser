@@ -257,7 +257,7 @@ const EmployeeSignup = ({ history, match }) => {
                   <Link
                     onClick={() => {
                       window.open(
-                        "https://dev74.onlinetestingserver.com/LMS/home"
+                        "https://wrightcoacademy.com"
                       );
                     }}
                     to="#"

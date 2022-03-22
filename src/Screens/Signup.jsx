@@ -229,7 +229,7 @@ const Signup = ({ history }) => {
                   <Link
                     onClick={() => {
                       window.open(
-                        "https://dev74.onlinetestingserver.com/LMS/enterprise/SignUp"
+                        "https://wrightcoacademy.com/enterprise/SignUp"
                       );
                     }}
                     to="#"
@@ -240,7 +240,7 @@ const Signup = ({ history }) => {
                   <Link
                     onClick={() => {
                       window.open(
-                        "https://dev74.onlinetestingserver.com/LMS/home"
+                        "https://wrightcoacademy.com/home"
                       );
                     }}
                     to="#"

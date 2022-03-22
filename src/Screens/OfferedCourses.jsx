@@ -105,11 +105,14 @@ const OfferedCourses = ({ history }) => {
                       <div className="card-body table-responsive card-dashboard">
                         <h1 className="main-heading">Offered Courses</h1>
                         <div className="clearfix" />
+                        <h3 className="mt-2">Category FIlter</h3>
+
                         <div className="mt-2">
+                          
                           <select
                             name
                             id
-                            size={2}
+                            size={3}
 
                             className="genaral-select"
                             onChange={(e) => {

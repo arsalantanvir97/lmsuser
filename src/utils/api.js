@@ -7,8 +7,8 @@ if (window.location.hostname == "localhost") {
   baseURL = "https://localhost:5095/api";
   imageURL = "https://localhost:5095/";
 } else {
-  baseURL = "https://dev74.onlinetestingserver.com:5095/api";
-  imageURL = "https://dev74.onlinetestingserver.com:5095/";
+  baseURL = "https://wrightcoacademy.com:5095/api";
+  imageURL = "https://wrightcoacademy.com:5095/";
 }
 
 const api = axios.create({
