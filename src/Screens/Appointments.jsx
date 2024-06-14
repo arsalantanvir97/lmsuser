@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { baseURL, imageURL } from "../utils/api";
-import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import { baseURL, imageURL } from "../utils/api"
+import axios from "axios"
+import { Link, useHistory } from "react-router-dom"
 // import DatePicker from "react-datepicker";
-import Pagination from "../components/Padgination";
-import moment from "moment";
-import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import { LoaderName } from "react-awesome-loaders";
-import { createCall } from "../config/vox";
-import Calender from "../components/Calender";
+import Pagination from "../components/Padgination"
+import moment from "moment"
+import Swal from "sweetalert2"
+import { useSelector } from "react-redux"
+import { createCall } from "../config/vox"
+import Calender from "../components/Calender"
 
 const Appointments = () => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const [userappointments, setuserappointments] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [searchString, setSearchString] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [status, setStatus] = useState("");
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const [userappointments, setuserappointments] = useState([])
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(10)
+  const [searchString, setSearchString] = useState("")
+  const [from, setFrom] = useState("")
+  const [to, setTo] = useState("")
+  const [status, setStatus] = useState("")
 
   useEffect(() => {
-    handleGetUserAppointments();
-  }, [page, perPage, from, to, status, searchString]);
+    handleGetUserAppointments()
+  }, [page, perPage, from, to, status, searchString])
 
   const handleGetUserAppointments = async () => {
     try {
@@ -38,19 +37,19 @@ const Appointments = () => {
           searchString,
           from,
           to,
-          status
+          status,
         },
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
 
-      console.log("res", res);
-      setuserappointments(res.data?.appointment);
+      console.log("res", res)
+      setuserappointments(res.data?.appointment)
     } catch (err) {
-      console.log("err", err);
+      console.log("err", err)
     }
-  };
+  }
 
   return (
     <div className="app-content content">
@@ -77,7 +76,12 @@ const Appointments = () => {
                       </div>
                       <div className="row mb-1">
                         <div className="col-lg-6 col-12">
-                       <Calender from={from}setFrom={setFrom}to={to}setTo={setTo}/>
+                          <Calender
+                            from={from}
+                            setFrom={setFrom}
+                            to={to}
+                            setTo={setTo}
+                          />
                         </div>
                       </div>
                       <div className="clearfix" />
@@ -158,7 +162,7 @@ const Appointments = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Appointments;
+export default Appointments

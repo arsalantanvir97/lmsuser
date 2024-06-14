@@ -1,21 +1,21 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { baseURL } from "../utils/api";
-import { useSelector, useDispatch } from "react-redux";
-import Toasty from "../utils/toast";
-import { useHistory } from "react-router-dom";
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { baseURL } from "../utils/api"
+import { useSelector, useDispatch } from "react-redux"
+import Toasty from "../utils/toast"
+import { useHistory } from "react-router-dom"
 
 const CourseDetails = (props) => {
-  let history = useHistory();
-  const [course, setcourse] = useState();
-  const [coursemonth, setcoursemonth] = useState("");
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  let history = useHistory()
+  const [course, setcourse] = useState()
+  const [coursemonth, setcoursemonth] = useState("")
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
 
   useEffect(() => {
-    handleGetCourse();
-  }, []);
+    handleGetCourse()
+  }, [])
 
   const handleGetCourse = async () => {
     try {
@@ -23,28 +23,28 @@ const CourseDetails = (props) => {
         url: `${baseURL}/course/courseDetails/${props?.match?.params?.id}`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
 
-      console.log("res", res);
-      setcourse(res?.data?.course);
+      console.log("res", res)
+      setcourse(res?.data?.course)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   useEffect(() => {
-    console.log("coursemonth", coursemonth);
-  }, [coursemonth]);
+    console.log("coursemonth", coursemonth)
+  }, [coursemonth])
   const redirectHandler = async () => {
     await history.push({
       pathname: "/CoursePayment",
       state: {
         id: course?._id,
-        amount: coursemonth
-      }
-    });
-  };
+        amount: coursemonth,
+      },
+    })
+  }
   return (
     <>
       <section className="admin-profile">
@@ -58,12 +58,16 @@ const CourseDetails = (props) => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                            <h1 className="main-heading">
-                          <Link to="/OfferedCourses">
-                              <i style={{color:'black'}} className="fas fa-chevron-left mr-1" /> </Link>
-                              Course Details
-                            </h1>
-                         
+                          <h1 className="main-heading">
+                            <Link to="/OfferedCourses">
+                              <i
+                                style={{ color: "black" }}
+                                className="fas fa-chevron-left mr-1"
+                              />{" "}
+                            </Link>
+                            Course Details
+                          </h1>
+
                           <div className="clearfix" />
                           <div className="dash-card-inner mt-4">
                             <p className="details-p">
@@ -117,7 +121,7 @@ const CourseDetails = (props) => {
                                                 coursemonth
                                               )}
                                               onChange={(e) => {
-                                                setcoursemonth(course);
+                                                setcoursemonth(course)
                                               }}
                                             />
                                             <label
@@ -135,7 +139,8 @@ const CourseDetails = (props) => {
                                       Cost:
                                     </label>
                                     <p htmlFor className="question-label mt-1">
-                                      ${coursemonth?.amount}
+                                      {/* ${coursemonth?.amount} */}
+                                      $0
                                     </p>
                                   </div>
                                 </div>
@@ -192,7 +197,7 @@ const CourseDetails = (props) => {
         </div>
       </section>
     </>
-  );
-};
+  )
+}
 
-export default CourseDetails;
+export default CourseDetails

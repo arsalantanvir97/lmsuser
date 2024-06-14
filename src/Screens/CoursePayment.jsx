@@ -1,100 +1,120 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import CreditCardInput from "react-credit-card-input";
-import { baseURL, imageURL } from "../utils/api";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import moment from "moment";
-import StripeCheckout from "react-stripe-checkout";
-import Swal from "sweetalert2";
-import { SunspotLoader } from "react-awesome-loaders";
-import { handleChange } from "../utils/InputNumberValidation";
+import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom/cjs/react-router-dom.min"
+import CreditCardInput from "react-credit-card-input"
+import { baseURL, imageURL } from "../utils/api"
+import { useSelector, useDispatch } from "react-redux"
+import axios from "axios"
+import moment from "moment"
+import StripeCheckout from "react-stripe-checkout"
+import Swal from "sweetalert2"
+import { handleChange } from "../utils/InputNumberValidation"
 
 const CoursePayment = (props) => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const [course, setcourse] = useState();
-  const [amountinnum, setamountinnum] = useState();
-  const [loading, setloading] = useState(false);
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const [course, setcourse] = useState()
+  const [amountinnum, setamountinnum] = useState()
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    handleGetCourse();
-    setamountinnum(Number(props?.location?.state?.amount?.amount));
-  }, []);
+    handleGetCourse()
+    setamountinnum(Number(props?.location?.state?.amount?.amount))
+  }, [])
   useEffect(() => {
-    console.log("props?.location?.state", props);
-  }, [props]);
+    console.log("props?.location?.state", props)
+  }, [props])
   const handleGetCourse = async () => {
     try {
       const res = await axios({
         url: `${baseURL}/course/courseDetails/${props?.location?.state?.id}`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
 
-      console.log("res", res);
-      setcourse(res?.data?.course);
+      console.log("res", res)
+      setcourse(res?.data?.course)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
-  const [email, setemail] = useState("");
-  const [phone, setphone] = useState("");
-  const [cardholdername, setcardholdername] = useState("");
-  const [cardNumber, setcardNumber] = useState("");
-  const [expiry, setexpiry] = useState("");
-  const [cvc, setcvc] = useState("");
+  }
+  const [email, setemail] = useState("")
+  const [phone, setphone] = useState("")
+  const [cardholdername, setcardholdername] = useState("")
+  const [cardNumber, setcardNumber] = useState("")
+  const [expiry, setexpiry] = useState("")
+  const [cvc, setcvc] = useState("")
 
-  const [username, setusername] = useState("");
-  const [toggleform, settoggleform] = useState(0);
+  const [username, setusername] = useState("")
+  const [toggleform, settoggleform] = useState(0)
 
-  const emptyfunc = async () => {};
+  const emptyfunc = async () => {}
 
-  async function handleToken(token) {
-    setloading(true);
-    console.log("handleToken");
-    const config = {
-      header: {
-        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V"
-      }
-    };
-    const response = await axios.post(
-      `${baseURL}/checkout`,
-      { token, product: amountinnum },
-      config
-    );
-    console.log("response", response);
-    const { status } = response.data;
+  // async function handleToken(token) {
+  //   setloading(true)
+  //   console.log("handleToken")
+  //   const config = {
+  //     header: {
+  //       Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V",
+  //     },
+  //   }
+  //   const response = await axios.post(
+  //     `${baseURL}/checkout`,
+  //     { token, product: amountinnum },
+  //     config
+  //   )
+  //   console.log("response", response)
+  //   const { status } = response.data
 
-    console.log(
-      "res",
-      response.data.id,
-      response.data.status,
-      response.headers.date,
-      response.data.receipt_email
-    );
+  //   console.log(
+  //     "res",
+  //     response.data.id,
+  //     response.data.status,
+  //     response.headers.date,
+  //     response.data.receipt_email
+  //   )
+  //   const res = await axios.post(
+  //     `${baseURL}/registeredCourses/createregisteredCourses`,
+  //     {
+  //       userid: userInfo?._id,
+  //       courseid: course?._id,
+  //       duration: props?.location?.state?.amount?.month,
+  //       cost: amountinnum,
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${userInfo.token}`,
+  //       },
+  //     }
+  //   )
+  //   if (res?.status == 201) {
+  //     props?.history?.push("/RegistrationCourses")
+  //     setloading(false)
+  //   }
+  // }
+  const handleFunc = async () => {
+    setloading(true)
+
     const res = await axios.post(
       `${baseURL}/registeredCourses/createregisteredCourses`,
       {
         userid: userInfo?._id,
         courseid: course?._id,
         duration: props?.location?.state?.amount?.month,
-        cost: amountinnum
+        cost: amountinnum,
       },
       {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
+          Authorization: `Bearer ${userInfo.token}`,
+        },
       }
-    );
+    )
     if (res?.status == 201) {
-      props?.history?.push("/RegistrationCourses");
-      setloading(false);
+      props?.history?.push("/RegistrationCourses")
+      setloading(false)
     }
   }
-
   return (
     <>
       {loading && (
@@ -104,16 +124,9 @@ const CoursePayment = (props) => {
             top: "50%",
             left: "50%",
             transform: "translate(-30%, -60%)",
-            zIndex: 1111111111111
+            zIndex: 1111111111111,
           }}
-        >
-          <SunspotLoader
-            gradientColors={["#000"]}
-            shadowColor={"#FFF"}
-            desktopSize={"50px"}
-            mobileSize={"35px"}
-          />
-        </div>
+        ></div>
       )}
       <section className="admin-profile">
         <div className="app-content content">
@@ -126,11 +139,16 @@ const CoursePayment = (props) => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                          
-                            <h1 className="main-heading"><Link to="/PaymentLogs">
-                              <i style={{color:'black'}} className="fas fa-chevron-left" />  </Link> Payments
-                            </h1>
-                        
+                          <h1 className="main-heading">
+                            <Link to="/PaymentLogs">
+                              <i
+                                style={{ color: "black" }}
+                                className="fas fa-chevron-left"
+                              />{" "}
+                            </Link>{" "}
+                            Payments
+                          </h1>
+
                           <div className="clearfix" />
                           <div className="dash-card-inner mt-4">
                             <section className>
@@ -411,13 +429,20 @@ const CoursePayment = (props) => {
                                         >
                                           Previous
                                         </button>
+                                        <button
+                                          type="button"
+                                          class="green-btn mr-1"
+                                          onClick={() => handleFunc()}
+                                        >
+                                          Register
+                                        </button>
 
-                                        <StripeCheckout
+                                        {/* <StripeCheckout
                                           stripeKey="pk_test_IdCqGO7sona7aWZqqiXTs3MN00vl1vkEQa"
                                           token={handleToken}
                                           amount={amountinnum * 100}
                                           email={email}
-                                        ></StripeCheckout>
+                                        ></StripeCheckout> */}
                                       </div>
                                     </>
                                   </div>
@@ -557,7 +582,7 @@ const CoursePayment = (props) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CoursePayment;
+export default CoursePayment

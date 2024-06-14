@@ -1,36 +1,35 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { baseURL } from "../utils/api";
-import DatePicker from "react-datepicker";
-import Toasty from "../utils/toast";
-import moment from "moment";
-import Swal from "sweetalert2";
-import StripeCheckout from "react-stripe-checkout";
-import { SunspotLoader } from "react-awesome-loaders";
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { baseURL } from "../utils/api"
+import DatePicker from "react-datepicker"
+import Toasty from "../utils/toast"
+import moment from "moment"
+import Swal from "sweetalert2"
+import StripeCheckout from "react-stripe-checkout"
 
 const RequestNewAppointment = ({ history }) => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
 
-  const [allofcourses, setallofcourses] = useState([]);
-  const [adminBooking, setadminBooking] = useState();
-  const [requesttime, setrequesttime] = useState("");
-  const [courseid, setcourseid] = useState("");
-  const [type, settype] = useState("");
-  const [requestdate, setrequestdate] = useState(null);
-  const [costsetting, setcostsetting] = useState("");
-  const [cost, setcost] = useState("");
-  const [description, setdescription] = useState("");
-  const [alreadyBooked, setalreadyBooked] = useState(true);
-  const [loading, setloading] = useState(false);
+  const [allofcourses, setallofcourses] = useState([])
+  const [adminBooking, setadminBooking] = useState()
+  const [requesttime, setrequesttime] = useState("")
+  const [courseid, setcourseid] = useState("")
+  const [type, settype] = useState("")
+  const [requestdate, setrequestdate] = useState(null)
+  const [costsetting, setcostsetting] = useState("")
+  const [cost, setcost] = useState("")
+  const [description, setdescription] = useState("")
+  const [alreadyBooked, setalreadyBooked] = useState(true)
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    handleGetCourses();
-    handleGetAdminBooking();
-    handleGetCostSetting();
-  }, []);
+    handleGetCourses()
+    handleGetAdminBooking()
+    handleGetCostSetting()
+  }, [])
 
   const handleGetCourses = async () => {
     try {
@@ -38,48 +37,48 @@ const RequestNewAppointment = ({ history }) => {
         url: `${baseURL}/course/allCourses`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
-      console.log("res", res);
-      setallofcourses(res?.data?.allCourses);
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
+      console.log("res", res)
+      setallofcourses(res?.data?.allCourses)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   const handleGetAdminBooking = async () => {
     try {
       const res = await axios({
         url: `${baseURL}/booking/getBooking`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
-      console.log("res", res);
-      setadminBooking(res?.data?.booking);
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
+      console.log("res", res)
+      setadminBooking(res?.data?.booking)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   const handleGetCostSetting = async () => {
     try {
       const res = await axios({
         url: `${baseURL}/costsetting/getCostSetting`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
-      console.log("res", res);
-      setcostsetting(res?.data?.costSetting);
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
+      console.log("res", res)
+      setcostsetting(res?.data?.costSetting)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const updateCostHandler = async (value) => {
-    settype(value);
+    settype(value)
     setcost(
       value == "audiocall"
         ? costsetting?.audiocall
@@ -88,61 +87,61 @@ const RequestNewAppointment = ({ history }) => {
         : value == "videocall"
         ? costsetting?.videocall
         : null
-    );
-  };
+    )
+  }
   useEffect(() => {
-    console.log("requesttime", requesttime);
-  }, [requesttime]);
+    console.log("requesttime", requesttime)
+  }, [requesttime])
 
   const onSubmitHandler = async () => {
     const res = await axios.post(
       `${baseURL}/booking/checkAlreadyBooked`,
       {
         requestdate: requestdate,
-        requesttime
+        requesttime,
       },
       {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
+          Authorization: `Bearer ${userInfo.token}`,
+        },
       }
-    );
-    console.log("res", res);
+    )
+    console.log("res", res)
     if (res?.status == 202) {
       Swal.fire({
         icon: "error",
         title: "",
         text: `${requesttime} is already booked. Please select another time.`,
         showConfirmButton: false,
-        timer: 1500
-      });
+        timer: 1500,
+      })
     } else if (res?.status == 201) {
-      setalreadyBooked(false);
+      setalreadyBooked(false)
       Swal.fire({
         icon: "success",
         title: "",
         text: `Please pay to have an appointment booked with Admin`,
         showConfirmButton: false,
-        timer: 1500
-      });
+        timer: 1500,
+      })
     }
-  };
+  }
 
   async function handleToken(token) {
-    setloading(true);
-    console.log("handleToken");
+    setloading(true)
+    console.log("handleToken")
     const config = {
       header: {
-        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V"
-      }
-    };
+        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V",
+      },
+    }
     const response = await axios.post(
       `${baseURL}/checkout`,
       { token, product: cost },
       config
-    );
-    console.log("response", response);
-    const { status } = response.data;
+    )
+    console.log("response", response)
+    const { status } = response.data
 
     console.log(
       "res",
@@ -150,7 +149,7 @@ const RequestNewAppointment = ({ history }) => {
       response.data.status,
       response.headers.date,
       response.data.receipt_email
-    );
+    )
     const res = await axios.post(
       `${baseURL}/appointment/createAppointment`,
       {
@@ -160,24 +159,24 @@ const RequestNewAppointment = ({ history }) => {
         appointmentdate: moment(requestdate).format("DD/MM/YYYY"),
         appointmenttime: requesttime,
         description,
-        type
+        type,
       },
       {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
+          Authorization: `Bearer ${userInfo.token}`,
+        },
       }
-    );
+    )
     if (res?.status == 201) {
-      setloading(false);
+      setloading(false)
       Swal.fire({
         icon: "success",
         title: "",
         text: `Appointment made with Admin Succesfully`,
         showConfirmButton: false,
-        timer: 1500
-      });
-      history.push("/Appointments");
+        timer: 1500,
+      })
+      history.push("/Appointments")
     }
   }
 
@@ -190,16 +189,9 @@ const RequestNewAppointment = ({ history }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-30%, -60%)",
-            zIndex: 1111111111111
+            zIndex: 1111111111111,
           }}
-        >
-          <SunspotLoader
-            gradientColors={["#000"]}
-            shadowColor={"#FFF"}
-            desktopSize={"50px"}
-            mobileSize={"35px"}
-          />
-        </div>
+        ></div>
       )}
       <section className="admin-profile">
         <div className="app-content content">
@@ -212,12 +204,16 @@ const RequestNewAppointment = ({ history }) => {
                     <div className="card jost pad-20 pb-5 px-lg-4 px-2">
                       <div className="card-content collapse show">
                         <div className="card-body table-responsive card-dashboard">
-                            <h1 className="main-heading">
-                          <Link to="/Appointments">
-                              <i style={{color:'black'}}  className="fas fa-chevron-left" />  </Link> Request New
-                              Appointment
-                            </h1>
-                        
+                          <h1 className="main-heading">
+                            <Link to="/Appointments">
+                              <i
+                                style={{ color: "black" }}
+                                className="fas fa-chevron-left"
+                              />{" "}
+                            </Link>{" "}
+                            Request New Appointment
+                          </h1>
+
                           <div className="clearfix" />
                           <div className="dash-card-inner mt-4">
                             <form>
@@ -232,7 +228,7 @@ const RequestNewAppointment = ({ history }) => {
                                     className="all-input w-100 mb-0"
                                     value={courseid}
                                     onChange={(e) => {
-                                      setcourseid(e.target.value);
+                                      setcourseid(e.target.value)
                                     }}
                                   >
                                     <option value>Select</option>
@@ -253,7 +249,7 @@ const RequestNewAppointment = ({ history }) => {
                                   <DatePicker
                                     selected={requestdate}
                                     minDate={new Date()}
-                                    placeholderText='Select a date'
+                                    placeholderText="Select a date"
                                     onChange={(requestdate) =>
                                       setrequestdate(requestdate)
                                     }
@@ -294,13 +290,10 @@ const RequestNewAppointment = ({ history }) => {
                                     <option>select</option>
                                     {adminBooking?.time?.length > 0 &&
                                       adminBooking?.time?.map((bok) => (
-                                        <option
-                                          value={bok?.time}
-                                        >
+                                        <option value={bok?.time}>
                                           {bok?.time}
                                         </option>
                                       ))}
-                                    
                                   </select>
                                 </div>
                               </div>
@@ -313,7 +306,7 @@ const RequestNewAppointment = ({ history }) => {
                                       name="radio-group"
                                       value={type}
                                       onClick={() => {
-                                        updateCostHandler("chat");
+                                        updateCostHandler("chat")
                                       }}
                                     />
                                     <label
@@ -330,7 +323,7 @@ const RequestNewAppointment = ({ history }) => {
                                       name="radio-group"
                                       value={type}
                                       onClick={() => {
-                                        updateCostHandler("audiocall");
+                                        updateCostHandler("audiocall")
                                       }}
                                     />
                                     <label
@@ -347,7 +340,7 @@ const RequestNewAppointment = ({ history }) => {
                                       name="radio-group"
                                       value={type}
                                       onClick={() => {
-                                        updateCostHandler("videocall");
+                                        updateCostHandler("videocall")
                                       }}
                                     />
                                     <label
@@ -380,7 +373,7 @@ const RequestNewAppointment = ({ history }) => {
                                     placeholder="Enter Description"
                                     value={description}
                                     onChange={(e) => {
-                                      setdescription(e.target.value);
+                                      setdescription(e.target.value)
                                     }}
                                   />
                                 </div>
@@ -401,7 +394,7 @@ const RequestNewAppointment = ({ history }) => {
                                           : Toasty(
                                               "error",
                                               `Please fill out all the required fields`
-                                            );
+                                            )
                                       }}
                                     >
                                       Next
@@ -431,7 +424,7 @@ const RequestNewAppointment = ({ history }) => {
         </div>
       </section>
     </>
-  );
-};
+  )
+}
 
-export default RequestNewAppointment;
+export default RequestNewAppointment

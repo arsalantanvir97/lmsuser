@@ -1,38 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { baseURL, imageURL } from "../utils/api";
-import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
-import DatePicker from "react-datepicker";
-import Pagination from "../components/Padgination";
-import moment from "moment";
-import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import { LoaderName } from "react-awesome-loaders";
-import StripeCheckout from "react-stripe-checkout";
-import { SunspotLoader } from "react-awesome-loaders";
-import { closeModals } from "../utils/closeModals";
-import Calender from "../components/Calender";
+import React, { useEffect, useState } from "react"
+import { baseURL, imageURL } from "../utils/api"
+import axios from "axios"
+import { Link, useHistory } from "react-router-dom"
+import DatePicker from "react-datepicker"
+import Pagination from "../components/Padgination"
+import moment from "moment"
+import Swal from "sweetalert2"
+import { useSelector } from "react-redux"
+import StripeCheckout from "react-stripe-checkout"
+import { closeModals } from "../utils/closeModals"
+import Calender from "../components/Calender"
 
 const RegistrationCourses = () => {
-  let history = useHistory();
+  let history = useHistory()
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const [registeredcourses, setregisteredcourses] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [reregisterdata, setreregisterdata] = useState();
-  const [searchString, setSearchString] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [status, setStatus] = useState("");
-  const [loading, setloading] = useState(false);
-  
-
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const [registeredcourses, setregisteredcourses] = useState([])
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(10)
+  const [reregisterdata, setreregisterdata] = useState()
+  const [searchString, setSearchString] = useState("")
+  const [from, setFrom] = useState("")
+  const [to, setTo] = useState("")
+  const [status, setStatus] = useState("")
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    handleGetQuizzes();
-  }, [page, perPage, from, to, status, searchString]);
+    handleGetQuizzes()
+  }, [page, perPage, from, to, status, searchString])
 
   const handleGetQuizzes = async () => {
     try {
@@ -46,38 +42,38 @@ const RegistrationCourses = () => {
           searchString,
           from,
           to,
-          status
+          status,
         },
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
 
-      console.log("res", res);
-      setregisteredcourses(res.data?.registeredcourses);
+      console.log("res", res)
+      setregisteredcourses(res.data?.registeredcourses)
     } catch (err) {
-      console.log("err", err);
+      console.log("err", err)
     }
-  };
+  }
   const redirectHandler = (id) => {
-    history?.push(`/RegisteredCourseLecture${id}`);
-  };
+    history?.push(`/RegisteredCourseLecture${id}`)
+  }
   async function handleToken(token) {
     closeModals()
-    setloading(true);
-    console.log("handleToken");
+    setloading(true)
+    console.log("handleToken")
     const config = {
       header: {
-        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V"
-      }
-    };
+        Authorization: "Bearer sk_test_OVw01bpmRN2wBK2ggwaPwC5500SKtEYy9V",
+      },
+    }
     const response = await axios.post(
       `${baseURL}/checkout`,
       { token, product: reregisterdata?.cost },
       config
-    );
-    console.log("response", response);
-    const { status } = response.data;
+    )
+    console.log("response", response)
+    const { status } = response.data
 
     console.log(
       "res",
@@ -85,30 +81,30 @@ const RegistrationCourses = () => {
       response.data.status,
       response.headers.date,
       response.data.receipt_email
-    );
-    console.log("reregisterdata?.courseid", reregisterdata?.courseid);
+    )
+    console.log("reregisterdata?.courseid", reregisterdata?.courseid)
     const res = await axios.post(
       `${baseURL}/registeredCourses/reregisterCourse`,
       {
-        id: reregisterdata?._id
+        id: reregisterdata?._id,
       },
       {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
+          Authorization: `Bearer ${userInfo.token}`,
+        },
       }
-    );
+    )
     if (res?.status == 201) {
-      setloading(false);
+      setloading(false)
       Swal.fire({
         icon: "success",
         title: "",
         text: `Course Registered Successfully`,
         showConfirmButton: false,
-        timer: 1500
-      });
+        timer: 1500,
+      })
     }
-    handleGetQuizzes();
+    handleGetQuizzes()
   }
   return (
     <>
@@ -119,18 +115,10 @@ const RegistrationCourses = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-30%, -60%)",
-          
 
-            zIndex: 1111111111111
+            zIndex: 1111111111111,
           }}
-        >
-          <SunspotLoader
-            gradientColors={["#000"]}
-            shadowColor={"#FFF"}
-            desktopSize={"50px"}
-            mobileSize={"35px"}
-          />
-        </div>
+        ></div>
       )}
       <div className="app-content content">
         <div className="content-wrapper">
@@ -142,12 +130,18 @@ const RegistrationCourses = () => {
                   <div className="card user-management">
                     <div className="card-content collapse show">
                       <div className="card-body table-responsive card-dashboard">
-                        <h1 className="main-heading mb-1">Registered Courses</h1>
+                        <h1 className="main-heading mb-1">
+                          Registered Courses
+                        </h1>
                         <div className="clearfix" />
                         <div className="row mb-1">
                           <div className="col-lg-6 col-12">
-                          <Calender from={from}setFrom={setFrom}to={to}setTo={setTo}/>
-
+                            <Calender
+                              from={from}
+                              setFrom={setFrom}
+                              to={to}
+                              setTo={setTo}
+                            />
                           </div>
                         </div>
                         <div className="clearfix" />
@@ -195,7 +189,7 @@ const RegistrationCourses = () => {
                                           reg?.expired == true
                                             ? setreregisterdata({
                                                 cost: reg?.cost,
-                                                _id: reg?._id
+                                                _id: reg?._id,
                                               })
                                             : redirectHandler(
                                                 reg?.courseid?._id
@@ -223,15 +217,15 @@ const RegistrationCourses = () => {
                           </table>
                         </div>
                         {registeredcourses?.docs?.length > 0 && (
-                        <Pagination
-                          totalDocs={registeredcourses?.totalDocs}
-                          totalPages={registeredcourses?.totalPages}
-                          currentPage={registeredcourses?.page}
-                          setPage={setPage}
-                          hasNextPage={registeredcourses?.hasNextPage}
-                          hasPrevPage={registeredcourses?.hasPrevPage}
-                        />
-                      )}
+                          <Pagination
+                            totalDocs={registeredcourses?.totalDocs}
+                            totalPages={registeredcourses?.totalPages}
+                            currentPage={registeredcourses?.page}
+                            setPage={setPage}
+                            hasNextPage={registeredcourses?.hasNextPage}
+                            hasPrevPage={registeredcourses?.hasPrevPage}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -326,7 +320,7 @@ const RegistrationCourses = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RegistrationCourses;
+export default RegistrationCourses

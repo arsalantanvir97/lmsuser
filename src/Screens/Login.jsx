@@ -1,136 +1,136 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import {
   userLoginAction,
-  userResetPasswordAction
-} from "../actions/userActions";
-import Swal from "sweetalert2";
-import api from "../utils/api";
-import Toasty from "../utils/toast";
-import { handleChange } from "../utils/InputNumberValidation";
-import { validateEmail } from "../utils/ValidateEmail";
-import InputNumber from "../components/InputNumber";
+  userResetPasswordAction,
+} from "../actions/userActions"
+import Swal from "sweetalert2"
+import api from "../utils/api"
+import Toasty from "../utils/toast"
+import { handleChange } from "../utils/InputNumberValidation"
+import { validateEmail } from "../utils/ValidateEmail"
+import InputNumber from "../components/InputNumber"
 
 const Login = ({ history }) => {
-  const dispatch = useDispatch();
-  const [confirm_password, setconfirm_password] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [code, setcode] = useState();
-  const [new_password, setnew_password] = useState();
-  const [forgotpasswordModal, setforgotpasswordModal] = useState(0);
-  const [showicon, setshowicon] = useState(true);
-  const [showicon2, setshowicon2] = useState(true);
-  const [showicon3, setshowicon3] = useState(true);
-  const [showicon4, setshowicon4] = useState(true);
-  const [loading, setloading] = useState(false);
+  const dispatch = useDispatch()
+  const [confirm_password, setconfirm_password] = useState("")
+  const [email, setemail] = useState("")
+  const [password, setpassword] = useState("")
+  const [code, setcode] = useState()
+  const [new_password, setnew_password] = useState()
+  const [forgotpasswordModal, setforgotpasswordModal] = useState(0)
+  const [showicon, setshowicon] = useState(true)
+  const [showicon2, setshowicon2] = useState(true)
+  const [showicon3, setshowicon3] = useState(true)
+  const [showicon4, setshowicon4] = useState(true)
+  const [loading, setloading] = useState(false)
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
   useEffect(() => {
     if (userInfo) {
-      history.replace("/Profile");
+      history.replace("/Profile")
     }
-  }, [userInfo]);
+  }, [userInfo])
 
   const loginHandler = async () => {
-    const emailvalidation = validateEmail(email);
-    console.log("emmmm", emailvalidation);
-    console.log("addEmployeeHandler");
+    const emailvalidation = validateEmail(email)
+    console.log("emmmm", emailvalidation)
+    console.log("addEmployeeHandler")
     if (emailvalidation == true) {
-      setloading(true);
+      setloading(true)
 
-      console.log("submitHandler");
+      console.log("submitHandler")
       await dispatch(
         userLoginAction(email, password, confirm_password, history)
-      );
-      setloading(false);
+      )
+      setloading(false)
 
-      setemail("");
-      setpassword("");
-      setconfirm_password("");
+      setemail("")
+      setpassword("")
+      setconfirm_password("")
     } else {
-      Toasty("error", `Please enter a valid email`);
-      setloading(false);
+      Toasty("error", `Please enter a valid email`)
+      setloading(false)
     }
-    setloading(false);
-  };
+    setloading(false)
+  }
 
   const forgotpasswordHandler = async (e) => {
     if (email?.length > 0) {
-      const emailvalidation = validateEmail(email);
-      console.log("emmmm", emailvalidation);
-      console.log("addEmployeeHandler");
+      const emailvalidation = validateEmail(email)
+      console.log("emmmm", emailvalidation)
+      console.log("addEmployeeHandler")
       if (emailvalidation == true) {
-        setloading(true);
-        const body = { email };
-        console.log("TEST");
+        setloading(true)
+        const body = { email }
+        console.log("TEST")
         try {
-          const res = await api.post("/user/userRecoverPassword", body);
-          setloading(false);
+          const res = await api.post("/user/userRecoverPassword", body)
+          setloading(false)
 
-          console.log("res", res);
+          console.log("res", res)
           if (res?.status == 201) {
             Swal.fire({
               icon: "success",
               title: "SUCCESS",
               text: "Verification Code Sent to your mail",
               showConfirmButton: false,
-              timer: 1500
-            });
-            setforgotpasswordModal(1);
+              timer: 1500,
+            })
+            setforgotpasswordModal(1)
           }
-          setloading(false);
+          setloading(false)
         } catch (error) {
-          setloading(false);
+          setloading(false)
 
-          setforgotpasswordModal(0);
+          setforgotpasswordModal(0)
 
-          console.log("IN HERE");
-          console.log(error?.response?.data);
-          Toasty("error", `🦄 Invalid Email!`);
+          console.log("IN HERE")
+          console.log(error?.response?.data)
+          Toasty("error", `🦄 Invalid Email!`)
         }
-        setloading(false);
+        setloading(false)
       } else {
-        setloading(false);
+        setloading(false)
 
-        Toasty("error", `Please enter a valid email`);
+        Toasty("error", `Please enter a valid email`)
       }
     } else {
-      Toasty("error", `Please fill out all the required fields`);
+      Toasty("error", `Please fill out all the required fields`)
     }
-    setloading(false);
-  };
+    setloading(false)
+  }
 
   const verificationCodeHandler = async () => {
     if (code?.length > 0) {
       try {
-        setloading(true);
-        console.log("code, email", code, email);
-        const body = { code, email };
-        console.log("TEST");
-        const res = await api.post("/user/userverifyRecoverCode", body);
-        setloading(false);
+        setloading(true)
+        console.log("code, email", code, email)
+        const body = { code, email }
+        console.log("TEST")
+        const res = await api.post("/user/userverifyRecoverCode", body)
+        setloading(false)
 
-        console.log("res", res);
+        console.log("res", res)
 
-        setforgotpasswordModal(2);
+        setforgotpasswordModal(2)
       } catch (error) {
-        setloading(false);
+        setloading(false)
 
-        console.log("error", error?.response);
-        Toasty("error", `🦄 ${error?.response?.data?.message}!`);
+        console.log("error", error?.response)
+        Toasty("error", `🦄 ${error?.response?.data?.message}!`)
       }
     } else {
-      Toasty("error", `Please fill out all the required fields`);
+      Toasty("error", `Please fill out all the required fields`)
     }
-    setloading(false);
-  };
+    setloading(false)
+  }
 
   const resetPasswordHandler = (e) => {
     if (new_password?.length > 0 && confirm_password?.length > 0) {
-      console.log("resetPasswordHandler");
+      console.log("resetPasswordHandler")
       dispatch(
         userResetPasswordAction(
           new_password,
@@ -138,20 +138,20 @@ const Login = ({ history }) => {
           code,
           email,
           (res) => {
-            console.log("res", res);
-            setforgotpasswordModal(3);
+            console.log("res", res)
+            setforgotpasswordModal(3)
           },
           (err) => {
-            console.log("err of SIGNIN -->", err);
-            setconfirm_password("");
-            setnew_password("");
+            console.log("err of SIGNIN -->", err)
+            setconfirm_password("")
+            setnew_password("")
           }
         )
-      );
+      )
     } else {
-      Toasty("error", `Please fill out all the required fields`);
+      Toasty("error", `Please fill out all the required fields`)
     }
-  };
+  }
   return (
     <section className="admin-login ad-log">
       <div className="container">
@@ -186,7 +186,7 @@ const Login = ({ history }) => {
                     placeholder="Enter Email Address"
                     value={email}
                     onChange={(e) => {
-                      setemail(e.target.value);
+                      setemail(e.target.value)
                     }}
                   />
                 </div>
@@ -204,7 +204,7 @@ const Login = ({ history }) => {
                       placeholder="Enter Password"
                       value={password}
                       onChange={(e) => {
-                        setpassword(e.target.value);
+                        setpassword(e.target.value)
                       }}
                     />
                     <i
@@ -231,7 +231,7 @@ const Login = ({ history }) => {
                       placeholder="Confirm Password"
                       value={confirm_password}
                       onChange={(e) => {
-                        setconfirm_password(e.target.value);
+                        setconfirm_password(e.target.value)
                       }}
                     />
                     <i
@@ -270,7 +270,14 @@ const Login = ({ history }) => {
                       Sign In
                     </button>
                   ) : (
-                    <i className="fas fa-spinner fa-pulse"></i>
+                    <div style={{ textAlign: "center", marginTop: 4 }}>
+                      {" "}
+                      <i className="fas fa-spinner fa-pulse"></i>
+                      <p style={{ fontSize: 17 }}>
+                        It may take around 50 seconds while signing up or
+                        logging in for the first time...
+                      </p>
+                    </div>
                   )}
                   <Link
                     to="/Signup"
@@ -280,9 +287,7 @@ const Login = ({ history }) => {
                   </Link>
                   <Link
                     onClick={() => {
-                      window.open(
-                        "https://wrightcoacademy.com/"
-                      );
+                      window.open("https://wrightcoacademy.com/")
                     }}
                     to="#"
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
@@ -348,7 +353,7 @@ const Login = ({ history }) => {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => {
-                      setemail(e.target.value);
+                      setemail(e.target.value)
                     }}
                   />
                 ) : forgotpasswordModal == 1 ? (
@@ -372,7 +377,7 @@ const Login = ({ history }) => {
                         placeholder="Enter Password"
                         value={new_password}
                         onChange={(e) => {
-                          setnew_password(e.target.value);
+                          setnew_password(e.target.value)
                         }}
                       />
                       <i
@@ -387,7 +392,7 @@ const Login = ({ history }) => {
                     </div>
                     <div
                       style={{
-                        height: 23
+                        height: 23,
                       }}
                     ></div>
                     <label htmlFor className="all-label">
@@ -402,7 +407,7 @@ const Login = ({ history }) => {
                         placeholder="Confirm Password"
                         value={confirm_password}
                         onChange={(e) => {
-                          setconfirm_password(e.target.value);
+                          setconfirm_password(e.target.value)
                         }}
                       />
                       <i
@@ -429,7 +434,7 @@ const Login = ({ history }) => {
                             : Toasty(
                                 "error",
                                 `Please fill out all the required fields`
-                              );
+                              )
                         }}
                       >
                         Resend Code
@@ -471,7 +476,7 @@ const Login = ({ history }) => {
               <Link
                 to="#"
                 onClick={() => {
-                  window.location.reload();
+                  window.location.reload()
                 }}
                 className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
               >
@@ -483,7 +488,7 @@ const Login = ({ history }) => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

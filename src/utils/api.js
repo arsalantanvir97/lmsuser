@@ -1,15 +1,15 @@
-import axios from "axios";
+import axios from "axios"
 
-export let baseURL;
-export let imageURL;
+export let baseURL
+export let imageURL
 
-if (window.location.hostname == "localhost") {
-  baseURL = "https://localhost:5095/api";
-  imageURL = "https://localhost:5095/";
-} else {
-  baseURL = "https://wrightcoacademy.com:5095/api";
-  imageURL = "https://wrightcoacademy.com:5095/";
-}
+// if (window.location.hostname == "localhost") {
+//   baseURL = "http://localhost:7048/api"
+//   imageURL = "http://localhost:7048/"
+// } else {
+baseURL = "https://lmsbackend-tmit.onrender.com/api"
+imageURL = "https://lmsbackend-tmit.onrender.com/"
+// }
 
 const api = axios.create({
   // baseURL: 'https://dev74.onlinetestingserver.com:5021/api',
@@ -18,9 +18,9 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-  }
-});
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  },
+})
 //   api.interceptors.request.use((config) => {
 //     document.querySelector('.spinner-container').style.display = 'block';
 //     return config;
@@ -38,4 +38,4 @@ const api = axios.create({
 //     return Promise.reject(error);
 //   });
 
-export default api;
+export default api

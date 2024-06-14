@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { baseURL, imageURL } from "../utils/api";
-import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
-import DatePicker from "react-datepicker";
-import Pagination from "../components/Padgination";
-import moment from "moment";
-import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import { LoaderName } from "react-awesome-loaders";
-import Calender from "../components/Calender";
+import React, { useEffect, useState } from "react"
+import { baseURL, imageURL } from "../utils/api"
+import axios from "axios"
+import { Link, useHistory } from "react-router-dom"
+import DatePicker from "react-datepicker"
+import Pagination from "../components/Padgination"
+import moment from "moment"
+import Swal from "sweetalert2"
+import { useSelector } from "react-redux"
+import Calender from "../components/Calender"
 
 const PaymentLogs = () => {
-  let history = useHistory();
+  let history = useHistory()
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const [registeredcourses, setregisteredcourses] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [searchString, setSearchString] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [status, setStatus] = useState("");
-  const [type, settype] = useState("");
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const [registeredcourses, setregisteredcourses] = useState([])
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(10)
+  const [searchString, setSearchString] = useState("")
+  const [from, setFrom] = useState("")
+  const [to, setTo] = useState("")
+  const [status, setStatus] = useState("")
+  const [type, settype] = useState("")
 
   useEffect(() => {
-    handleGetPayments();
-  }, [page, perPage, from, to, status, searchString,type]);
+    handleGetPayments()
+  }, [page, perPage, from, to, status, searchString, type])
 
   const handleGetPayments = async () => {
     try {
@@ -41,19 +40,19 @@ const PaymentLogs = () => {
           from,
           to,
           status,
-          type
+          type,
         },
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        }
-      });
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
 
-      console.log("res", res);
-      setregisteredcourses(res.data?.payment);
+      console.log("res", res)
+      setregisteredcourses(res.data?.payment)
     } catch (err) {
-      console.log("err", err);
+      console.log("err", err)
     }
-  };
+  }
   return (
     <div className="app-content content">
       <div className="content-wrapper">
@@ -69,19 +68,31 @@ const PaymentLogs = () => {
                       <div className="clearfix" />
                       <div className="row mb-1">
                         <div className="col-lg-6 col-12">
-                        <Calender from={from}setFrom={setFrom}to={to}setTo={setTo}/>
-
+                          <Calender
+                            from={from}
+                            setFrom={setFrom}
+                            to={to}
+                            setTo={setTo}
+                          />
                         </div>
                         <div className="col-lg-6 text-right mb-3">
-                          <select name id className="genaral-select"   value={type}
-                              onChange={(e) => {
-                                settype(e.target.value);
-                              
-                              }}>
+                          <select
+                            name
+                            id
+                            className="genaral-select"
+                            value={type}
+                            onChange={(e) => {
+                              settype(e.target.value)
+                            }}
+                          >
                             <option value>Select</option>
-                            <option value={''}>All</option>
-                            <option value={'Purchased Course'}>Purchased Course</option>
-                            <option  value={'Appointment Booked'}>Appointment Booked</option>
+                            <option value={""}>All</option>
+                            <option value={"Purchased Course"}>
+                              Purchased Course
+                            </option>
+                            <option value={"Appointment Booked"}>
+                              Appointment Booked
+                            </option>
                           </select>
                         </div>
                       </div>
@@ -122,9 +133,9 @@ const PaymentLogs = () => {
                                         <i className="fa fa-ellipsis-v" />
                                       </button>
                                       <div className="dropdown-menu">
-                                        <Link 
+                                        <Link
                                           className="dropdown-item"
-                                         to={`/PaymentLogDetails${reg?._id}`}
+                                          to={`/PaymentLogDetails${reg?._id}`}
                                         >
                                           <i className="fa fa-eye" />
                                           View{" "}
@@ -157,7 +168,7 @@ const PaymentLogs = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentLogs;
+export default PaymentLogs

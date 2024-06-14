@@ -1,65 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { userSignUpAction } from "../actions/userActions";
-import Swal from "sweetalert2";
-import api from "../utils/api";
-import Toasty from "../utils/toast";
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { userSignUpAction } from "../actions/userActions"
+import Swal from "sweetalert2"
+import api from "../utils/api"
+import Toasty from "../utils/toast"
 
-import ImageSelector from "../components/ImageSelector";
-import "react-toastify/dist/ReactToastify.css";
-import { validateEmail } from "../utils/ValidateEmail";
+import ImageSelector from "../components/ImageSelector"
+import "react-toastify/dist/ReactToastify.css"
+import { validateEmail } from "../utils/ValidateEmail"
 
 const Signup = ({ history }) => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const [loading, setloading] = useState(false);
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+  const [loading, setloading] = useState(false)
 
-  const [showicon, setshowicon] = useState(true);
-  const [showicon2, setshowicon2] = useState(true);
+  const [showicon, setshowicon] = useState(true)
+  const [showicon2, setshowicon2] = useState(true)
   useEffect(() => {
     if (userInfo) {
-      history.replace("/Profile");
+      history.replace("/Profile")
     }
-  }, [userInfo]);
-  const [image, setimage] = useState("");
-  const [username, setusername] = useState("");
-  const [confirmpassword, setconfirmpassword] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [type, settype] = useState("Student");
+  }, [userInfo])
+  const [image, setimage] = useState("")
+  const [username, setusername] = useState("")
+  const [confirmpassword, setconfirmpassword] = useState("")
+  const [email, setemail] = useState("")
+  const [password, setpassword] = useState("")
+  const [type, settype] = useState("Student")
 
-  const [is_edit, setIsEdit] = useState(true);
-  const dispatch = useDispatch();
+  const [is_edit, setIsEdit] = useState(true)
+  const dispatch = useDispatch()
 
   const registerUserHandler = async () => {
-    const emailvalidation = validateEmail(email);
-    console.log("emmmm", emailvalidation);
-    console.log("addEmployeeHandler");
+    const emailvalidation = validateEmail(email)
+    console.log("emmmm", emailvalidation)
+    console.log("addEmployeeHandler")
     if (emailvalidation == true) {
       try {
-        setloading(true);
-        const formData = new FormData();
+        setloading(true)
+        const formData = new FormData()
 
-        formData.append("user_image", image);
-        formData.append("username", username);
-        formData.append("email", email);
-        formData.append("password", password);
-        formData.append("type", type);
-        formData.append("confirmpassword", confirmpassword);
+        formData.append("user_image", image)
+        formData.append("username", username)
+        formData.append("email", email)
+        formData.append("password", password)
+        formData.append("type", type)
+        formData.append("confirmpassword", confirmpassword)
 
-        await dispatch(userSignUpAction(formData, history));
-        setloading(false);
+        await dispatch(userSignUpAction(formData, history))
+        setloading(false)
       } catch (error) {
-        setloading(false);
+        setloading(false)
       }
     } else {
-      setloading(false);
+      setloading(false)
 
-      Toasty("error", `Please enter a valid email`);
+      Toasty("error", `Please enter a valid email`)
     }
-    setloading(false);
-  };
+    setloading(false)
+  }
   return (
     <section className="admin-login ad-log">
       <div className="container">
@@ -119,7 +119,7 @@ const Signup = ({ history }) => {
                     placeholder="Enter Full Name"
                     value={username}
                     onChange={(e) => {
-                      setusername(e.target.value);
+                      setusername(e.target.value)
                     }}
                   />
                 </div>
@@ -135,7 +135,7 @@ const Signup = ({ history }) => {
                     placeholder="Enter Email Address"
                     value={email}
                     onChange={(e) => {
-                      setemail(e.target.value);
+                      setemail(e.target.value)
                     }}
                   />
                 </div>
@@ -153,7 +153,7 @@ const Signup = ({ history }) => {
                       placeholder="Enter Password"
                       value={password}
                       onChange={(e) => {
-                        setpassword(e.target.value);
+                        setpassword(e.target.value)
                       }}
                     />
                     <i
@@ -180,7 +180,7 @@ const Signup = ({ history }) => {
                       placeholder="Confirm Password"
                       value={confirmpassword}
                       onChange={(e) => {
-                        setconfirmpassword(e.target.value);
+                        setconfirmpassword(e.target.value)
                       }}
                     />
                     <i
@@ -218,7 +218,14 @@ const Signup = ({ history }) => {
                       Sign Up
                     </button>
                   ) : (
-                    <i className="fas fa-spinner fa-pulse"></i>
+                    <div style={{ textAlign: "center", marginTop: 4 }}>
+                      {" "}
+                      <i className="fas fa-spinner fa-pulse"></i>
+                      <p style={{ fontSize: 17 }}>
+                        It may take around 50 seconds while signing up or
+                        logging in for the first time...
+                      </p>
+                    </div>
                   )}
                   <Link
                     to="/"
@@ -230,7 +237,7 @@ const Signup = ({ history }) => {
                     onClick={() => {
                       window.open(
                         "https://wrightcoacademy.com/enterprise/SignUp"
-                      );
+                      )
                     }}
                     to="#"
                     className="register-link d-flex align-items-center justify-content-center mt-3"
@@ -239,9 +246,7 @@ const Signup = ({ history }) => {
                   </Link>
                   <Link
                     onClick={() => {
-                      window.open(
-                        "https://wrightcoacademy.com/home"
-                      );
+                      window.open("https://wrightcoacademy.com/home")
                     }}
                     to="#"
                     className="f-20 f-p d-flex align-items-center justify-content-center mt-md-3 mt-2"
@@ -259,7 +264,7 @@ const Signup = ({ history }) => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Signup;
+export default Signup
